@@ -28,7 +28,7 @@ Name: Karl Dorogy
 Student Number: 20168380
 
 
-Team Member #2: Douglas
+Team Member #2: Douglas Chafee
 
 Name:
 
