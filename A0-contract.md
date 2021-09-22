@@ -25,10 +25,10 @@ Team Member #1:
 
 Name: Karl Dorogy
 
-Student Number:	20168380
+Student Number: 20168380
 
 
-Team Member #2:
+Team Member #2: Douglas
 
 Name:
 
