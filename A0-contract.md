@@ -37,9 +37,9 @@ Student Number:	20167439
 
 Team Member #3:
 
-Name:
+Name: Douglas Chafee
 
-Student Number:	
+Student Number:	20144996
 
 
 Team Member #4:
