@@ -15,20 +15,14 @@ Please delete options that are not relevant.
 
 # How Has This Been Tested?
 
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
+Please describe the tests that you ran to verify your changes. Please also list any relevant details for your test configuration
 
 - [ ] Test A
 - [ ] Test B
 
-**Test Configuration**:
-* Firmware version:
-* Hardware:
-* Toolchain:
-* SDK:
-
 # Checklist:
 
-- [ ] My code follows the style guidelines of this project
+- [ ] My code follows the PEP 8 style guide for python
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have made corresponding changes to the documentation
