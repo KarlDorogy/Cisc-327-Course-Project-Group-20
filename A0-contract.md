@@ -44,6 +44,6 @@ Student Number:	20144996
 
 Team Member #4:
 
-Name:
+Name: Tom Lin   
 
-Student Number:	
+Student Number:	20148517
