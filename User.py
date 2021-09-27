@@ -5,6 +5,10 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(app)
 
+"""
+User will store personal information that is used on the qbay market
+"""
+
 
 class User(db.Model):
     # Sets primary key so we can map things to table
