@@ -6,11 +6,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(app)
 
 """
-Data base storing each succesful transaction between users that takes place on Qbay
+Data base storing each succesful transaction that takes place on Qbay
 """
+
+
 class Transaction(db.Model):
-    # Sets up primary key id for each succesful transaction that is through Qbay   
-    id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True) 
+    # Sets up primary key id for each succesful transaction through Qbay
+    id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
     # Sets a seller id for the seller of a product with each transaction
     seller_id = db.Column(db.Integer, unique=False, nullable=False)
     # Sets a buyer id for the buyer of a product with each transaction
@@ -21,7 +23,7 @@ class Transaction(db.Model):
     timestamp = db.Column(db.String(100), unique=False, nullable=False)
     # The product id that was associated with the transaction
     product_id = db.Column(db.Float, unique=False, nullable=False)
-    
+
     def __repr__(self):
         return '<Transaction ID: %r>' % self.id
         return '<Transaction Seller ID: %r>' % self.seller_id
