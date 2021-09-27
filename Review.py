@@ -13,3 +13,16 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+"""
+Lays out the attributes for reviews that users can place on products
+with a comment and a rating
+"""
+
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(120), unique=True, nullable=False)
+    verified_comment = db.Column(db.Boolean, primary_key=True)
