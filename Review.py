@@ -22,7 +22,11 @@ with a comment and a rating
 
 
 class Review(db.Model):
+    # User's id
     id = db.Column(db.Integer, primary_key=True)
+    # Integer rating from 1 to 5 stars that user rates
     rating = db.Column(db.Integer, primary_key=True)
+    # String to contain the user's comment
     comment = db.Column(db.String(120), unique=True, nullable=False)
+    # Boolean to check if user is verified
     verified_comment = db.Column(db.Boolean, primary_key=True)
