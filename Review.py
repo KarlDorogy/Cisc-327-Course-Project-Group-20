@@ -20,13 +20,15 @@ class Review(db.Model):
     # String to contain the user's comment
     comment = db.Column(db.String(300), unique=False, nullable=False)
     # Integer id tied to the user making the review
-    reviewer_id = db.Column(db.Integer, unique=True, nullable=False)
+    reviewer_id = db.Column(db.Integer, unique=False, nullable=False)
     # Boolean to check if user is verified
     verified_reviewer = db.Column(db.Boolean, unique=False, nullable=False)
     # Integer count of the number of users who pressed like on the review
     likes = db.Column(db.Integer, unique=False, nullable=False)
     # Integer count of the number of users who pressed dislike on the review
     dislikes = db.Column(db.Integer, unique=False, nullable=False)
+    # Integer tying each review to a product id
+    product_id = db.Column(db.Integer, unique=False, nullable=False)
 
     def __repr__(self):
         return '<Review ID: %r>' % self.id
@@ -36,3 +38,4 @@ class Review(db.Model):
         return '<Review Verified Reviwer: %r>' % self.verified_reviewer
         return '<Review Likes: %r>' % self.likes
         return '<Review Dislikes: %r' % self.dislikes
+        return '<Review Product ID: %r>' % self.product_id
