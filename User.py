@@ -18,7 +18,7 @@ class User(db.Model):
     # Used to verify user
     email = db.Column(db.String(120), unique=True, nullable=False)
     # Only verified users can make reviews
-    verified = db.Column(db.Bool, unique=False, nullable=False)
+    verified = db.Column(db.Boolean, unique=False, nullable=False)
     # Shows user balance, will be used for transactions
     wallet = db.Column(db.Float, unique=True, nullable=False)
     # Tracks all prodocts the user is buying
