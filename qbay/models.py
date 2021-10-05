@@ -20,9 +20,9 @@ class User(db.Model):
     email = db.Column(
         db.String(120), unique=True, nullable=False, primary_key=True)
     password = db.Column(db.String(120), nullable=False)
-    # (balance is Creating Pytest Error)
-    # Shows user balance, will be used for transactions
-    # balance = db.Column(db.Float, unique=True, nullable=False)
+    shipping_address = db.Column(db.String(120), nullable=True)
+    postal_code = db.Column(db.String(120), nullable=True)
+    balance = db.Column(db.Float, unique=False, nullable=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
