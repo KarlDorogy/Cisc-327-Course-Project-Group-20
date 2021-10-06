@@ -27,19 +27,6 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-    # # Remaining Douglas Code from Assignment/Sprint 1 for Users Below
-
-    # # Sets primary key so we can map things to table
-    # id = db.Column(db.Integer, primary_key=True)
-    # # Only verified users can make reviews
-    # verified = db.Column(db.Boolean, unique=False, nullable=False)
-    # # Tracks all prodocts the user is buying
-    # shopping_cart = db.Column(db.List, unique=True, nullable=True)
-    # # Tracks all products the user wants to buy
-    # wish_list = db.Column(db.Integer, unique=True, nullable=True)
-    # # User address that products are shipped to
-    # shipping_address = db.Column(db.String(200), unique=True, nullable=False)
-
 
 class Product(db.Model):
     # The id of the product. Used to identify the product in other entities.
@@ -70,23 +57,11 @@ with a comment and a rating that can be liked or disliked
 class Review(db.Model):
     # The primary key id for each review on any product
     id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+    email = db.Column(db.String(120), unique=False, nullable=False)
     # Integer rating from 1 to 5 stars that the user can rate
     score = db.Column(db.Integer, unique=False, nullable=False)
     # String to contain the user's comment
-    comment = db.Column(db.String(300), unique=False, nullable=False)
-
-    # # Remaining Tom Code from Assignment/Sprint 1 for Products Below
-
-    # # Integer id tied to the user making the review
-    # reviewer_id = db.Column(db.Integer, unique=False, nullable=False)
-    # # Boolean to check if user is verified
-    # verified_reviewer = db.Column(db.Boolean, unique=False, nullable=False)
-    # # Integer count of the number of users who pressed like on the review
-    likes = db.Column(db.Integer, unique=False, nullable=False)
-    # # Integer count of the number of users who pressed dislike on the review
-    # dislikes = db.Column(db.Integer, unique=False, nullable=False)
-    # # Integer tying each review to a product id
-    # product_id = db.Column(db.Integer, unique=False, nullable=False)
+    review = db.Column(db.String(300), unique=False, nullable=False)
 
 
 """
@@ -97,22 +72,14 @@ Data base table storing each succesful transaction that takes place on Qbay
 class Transaction(db.Model):
     # Sets up primary key id for each succesful transaction through Qbay
     id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
-    # The product id that was associated with the transaction
-    product_id = db.Column(db.Integer, unique=False, nullable=False)
     # Sets a seller id for the seller of a product with each transaction
-    user_email = db.Column(db.Integer, unique=False, nullable=True)
+    email = db.Column(db.String(120), unique=False, nullable=False)
+    # The product id that was associated with the transaction
+    product_id = db.Column(db.Integer, nullable=False)
     # The amount or price of a the transaction between users
     price = db.Column(db.Float, unique=False, nullable=False)
     # Sets a timestamp of a transaction
-    date = db.Column(db.String(100), unique=False, nullable=False)
-
-    # # Remaining Karl Code from Assignment/Sprint 1 for Transaction Below
-
-    # # Sets a buyer id for the buyer of a product with each transaction
-    # buyer_id = db.Column(db.Integer, unique=False, nullable=True)
-    # # Represents if a transaction is between two users
-    # # Or if the transaction is a addition to a user's balance
-    # balance_transaction = db.Column(db.Boolean, unique=False, nullable=False)
+    date = db.Column(db.Date, unique=False, nullable=False)
 
 
 # create all tables
@@ -135,7 +102,7 @@ def register(name, email, password):
         return False
 
     # create a new user
-    user = User(username=name, email=email, password=password)
+    user = User(username=name, email=email, password=password, shipping_adress=None)
     # add it to the current database session
     db.session.add(user)
     # actually save the user object
