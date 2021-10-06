@@ -20,9 +20,10 @@ class User(db.Model):
     email = db.Column(
         db.String(120), unique=True, nullable=False, primary_key=True)
     password = db.Column(db.String(120), nullable=False)
-    shipping_adress = db.Column(db.String(120), nullable=True)
+    shipping_address = db.Column(db.String(120), nullable=True)
     postal_code = db.Column(db.String(120), nullable=True)
     balance = db.Column(db.Float, unique=False, nullable=True)
+    
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -100,9 +101,43 @@ def register(name, email, password):
     existed = User.query.filter_by(email=email).all()
     if len(existed) > 0:
         return False
+    
+    # check if email or password are empty
+    if len(email.strip()) == 0 or len(password.strip()) == 0:
+        return False
+    
+    # check if username meets size requirment
+    if len(name) < 2 or len(name) > 20:
+        return False
+
+    # check if password meets length requirment
+    if len(password) < 6:
+        return False
+
+    # counting upercase, lowercase, and special characters in supplied password
+    uppercase_count = 0
+    lowercase_count = 0
+    special_count = 0
+    for char in password:
+        ascii_value = ord(char)
+        if (ascii_value >= 65) and (ascii_value <= 90):  # char is uppercase
+            uppercase_count += 1
+        if (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
+            lowercase_count += 1
+        # char is special character except space char
+        if ((ascii_value >= 33 and ascii_value <= 47) or 
+        (ascii_value >= 58 and ascii_value <= 64) or 
+        (ascii_value >= 123 and ascii_value <= 126)):
+            special_count += 1
+
+    # check if password meets character requirments    
+    if ((uppercase_count == 0) or (lowercase_count == 0) 
+    or (special_count == 0)):
+        return False
 
     # create a new user
-    user = User(username=name, email=email, password=password)
+    user = User(username=name, email=email, password=password,
+        shipping_address=None, postal_code=None, balance=100)
     # add it to the current database session
     db.session.add(user)
     # actually save the user object
@@ -120,7 +155,42 @@ def login(email, password):
       Returns:
         The user object if login succeeded otherwise None
     '''
+
+    # check if email or password are empty
+    if len(email.strip()) == 0 or len(password.strip()) == 0:
+        return False
+    
+    # check if email or password are empty
+    if len(email.strip()) == 0 or len(password.strip()) == 0:
+        return False
+
+    # counting upercase, lowercase, and special characters in supplied password
+    uppercase_count = 0
+    lowercase_count = 0
+    special_count = 0
+    for char in password:
+        ascii_value = ord(char)
+        if (ascii_value >= 65) and (ascii_value <= 90):  # char is uppercase
+            uppercase_count += 1
+        if (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
+            lowercase_count += 1
+        # char is special character except space char
+        if ((ascii_value >= 33 and ascii_value <= 47) or 
+        (ascii_value >= 58 and ascii_value <= 64) or 
+        (ascii_value >= 123 and ascii_value <= 126)):
+            special_count += 1
+
+    # check if password meets character requirments    
+    if ((uppercase_count == 0) or 
+    (lowercase_count == 0) or (special_count == 0)):
+        return False
+
     valids = User.query.filter_by(email=email, password=password).all()
     if len(valids) != 1:
         return None
+    print(valids[0])
     return valids[0]
+
+
+def update_user(name, shipping_address, postal_code):
+    pass

@@ -1,4 +1,4 @@
-from qbay.models import register, login
+from qbay.models import register, login, update_user
 
 
 def test_r1_1_user_register():
@@ -7,7 +7,7 @@ def test_r1_1_user_register():
     '''
 
     assert register('GoodEmail', 'good@test.com', '@Password') is True
-    assert register('BadEmail', '', '234567') is False
+    assert register('BadEmail', '', '@Password') is False
     assert register('BadPassword', 'badpassword@test.com', '') is False
     assert register('BadEverything', '', '') is False
 
@@ -23,6 +23,14 @@ def test_r1_2_user_register():
     assert user.password == '@Password'
 
 
+# NEEDS TO GET DONE
+def test_r1_3_user_register():
+    '''
+    The email has to follow addr-spec defined in RFC 5322 
+    '''
+    pass
+
+
 def test_r1_4_user_register():
     '''
     Password has to meet the required complexity: minimum length 6,
@@ -30,10 +38,18 @@ def test_r1_4_user_register():
     one special character.
     '''
 
-    assert register('TestPassword', 'TestPassword@test.com', '@Password') is True
+    assert (register('TestPassword', 'TestPassword@test.com', '@Password') is True)
     assert register('TestPassword', 'lowercasePassword@test.com', '@password') is False
     assert register('TestPassword', 'uppercasePassword@test.com', '@PASSWORD') is False
     assert register('TestPassword', 'specialPassword@test.com', 'Password') is False
+
+
+# NEEDS TO GET DONE
+def test_r1_5_user_register():
+    '''
+    User name has to be non-empty, alphanumeric-only, and space allowed only if it is not as the prefix or suffix.
+    '''
+    pass
 
 
 def test_r1_6_user_register():
@@ -66,7 +82,7 @@ def test_r1_8_user_register():
 
     register('ShippingUser', 'shipping@test.com', '@Password')
     user = login('shipping@test.com', '@Password')
-    assert user.shipping_adress is None
+    assert user.shipping_address is None
 
 
 def test_r1_9_user_register():
