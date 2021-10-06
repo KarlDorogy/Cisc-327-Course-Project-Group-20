@@ -20,7 +20,7 @@ class User(db.Model):
     email = db.Column(
         db.String(120), unique=True, nullable=False, primary_key=True)
     password = db.Column(db.String(120), nullable=False)
-    shipping_address = db.Column(db.String(120), nullable=True)
+    shipping_adress = db.Column(db.String(120), nullable=True)
     postal_code = db.Column(db.String(120), nullable=True)
     balance = db.Column(db.Float, unique=False, nullable=True)
 
@@ -102,7 +102,7 @@ def register(name, email, password):
         return False
 
     # create a new user
-    user = User(username=name, email=email, password=password, shipping_adress=None)
+    user = User(username=name, email=email, password=password)
     # add it to the current database session
     db.session.add(user)
     # actually save the user object
