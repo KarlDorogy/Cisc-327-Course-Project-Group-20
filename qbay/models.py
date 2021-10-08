@@ -48,13 +48,14 @@ class Product(db.Model):
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
     # The title of the product.
-    title = db.Column(db.String(1000), unique=False, nullable=False)
+    title = db.Column(db.String(80), unique=True, nullable=False)
     # The description of the product.
-    description = db.Column(db.String(1000), unique=False, nullable=True)
+    description = db.Column(db.String(2000), unique=False, nullable=True)
     # The last modified date of the product.
-    last_modified_date = db.Column(db.String(1000), unique=False, nullable=True)
+    last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
     owner_email = db.Column(db.String(1000), unique=False, nullable=False)
+   
 
 """
 Lays out the attributes for reviews that verified users can place on products
@@ -129,6 +130,68 @@ def update_product(new_price, new_title, new_description, title):
 
     return True
 
+def create_product(price, title, description, last_modified_date, owner_email):
+    
+    for character in title:
+        if character.isdigit():
+            return False
+        if title.index(character) == 0:
+            if character == " ":
+                return False
+        if title.index(character) == title.len():
+            if character == " ":
+                return False
+
+    if title.len() > 80:
+        return False
+    
+    if description.len() < 20 or description.len() > 2000 or description.len() <= title.len():
+        return False
+
+    if price < 10 or price > 10000:
+        return False
+    
+    if last_modified_date.index(4) or last_modified_date.index(7) != "-":
+        return False
+    
+    last_modified_year = int(last_modified_date[0:4])
+    if last_modified_year < 2021 or last_modified_year > 2025:
+        return False
+    last_modified_month = int(last_modified_date[5:7])
+    if last_modified_month < 1 or last_modified_month > 12:
+        return False
+    last_modified_day = int(last_modified_date[8:10])
+    if last_modified_day < 1 or last_modified_day > 31:
+        return False
+
+    if last_modified_year == 2021:
+        if last_modified_month == 1:
+            if last_modified_day < 2:
+                return False
+
+    if last_modified_year == 2025:
+        if last_modified_month > 1:
+            return False
+        else:
+            if last_modified_day >= 2:
+                return False
+    
+    if owner_email is None:
+        return False
+    
+    existed_emails = User.query.filter_by(email=owner_email).all()
+    if len(existed_emails) < 1:
+        return False
+    
+    existed_titles = Product.query.filter_by(title=title).all()
+    if len(existed_titles) > 1:
+        return False
+    print(existed_titles)
+    
+    new_product = Product(price, title, description, last_modified_date, owner_email)
+    db.session.add(new_product)
+
+    return True 
 
 def register(name, email, password):
     '''
