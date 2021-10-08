@@ -21,6 +21,20 @@ class Product(db.Model):
     quantity = db.Column(db.Integer)
     # Special attributes of the given product (i.e phones have storage).
     attributes = db.Column(db.String(1000), unique=False, nullable=True)
+    #The email of the user
+    user_email = db.Column(db.String(1000), unique=False, nullable=False)
+    #The email of the owner
+    owner_email = db.Column(db.String(1000), unique=False, nullable=False)
+    #The last modified date
+    last_modified_date = db.Column(db.String(1000), unique=False, nullable=True)
+    #The description of the product
+    description = db.Column(db.String(1000), unique=False, nullable=True)
 
-    def __repr__(self):
+def create_product():
+    product = Product
+
+def update_product():
+
+
+def __repr__(self):
         return '<Product %r>' % self.name
