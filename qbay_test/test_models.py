@@ -6,10 +6,10 @@ def test_r1_1_user_register():
     Both the email and password cannot be empty.
     '''
 
-    assert register('GoodEmail', 'good@test.com', '@Password') is True
-    assert register('BadEmail', '', '@Password') is False
-    assert register('BadPassword', 'badpassword@test.com', '') is False
-    assert register('BadEverything', '', '') is False
+    assert register('user', 'good@test.com', '@Password') is True
+    assert register('user', '', '@Password') is False
+    assert register('user', 'badpassword@test.com', '') is False
+    assert register('user', '', '') is False
 
 
 def test_r1_2_user_register():
@@ -26,7 +26,7 @@ def test_r1_2_user_register():
 # NEEDS TO GET DONE
 def test_r1_3_user_register():
     '''
-    The email has to follow addr-spec defined in RFC 5322 
+    The email has to follow addr-spec defined in RFC 5322
     '''
     
     assert register('testEmail', 'testemail.com', '@Password')
@@ -39,18 +39,23 @@ def test_r1_4_user_register():
     one special character.
     '''
 
-    assert (register('TestPassword', 'TestPassword@test.com', '@Password') is True)
-    assert register('TestPassword', 'lowercasePassword@test.com', '@password') is False
-    assert register('TestPassword', 'uppercasePassword@test.com', '@PASSWORD') is False
-    assert register('TestPassword', 'specialPassword@test.com', 'Password') is False
+    assert register('user', 'TestPassword@test.com', '@Password') is True
+    assert register('user', 'lowercasePassword@test.com', '@password') is False
+    assert register('user', 'uppercasePassword@test.com', '@PASSWORD') is False
+    assert register('user', 'specialPassword@test.com', 'Password') is False
 
 
-# NEEDS TO GET DONE
 def test_r1_5_user_register():
     '''
-    User name has to be non-empty, alphanumeric-only, and space allowed only if it is not as the prefix or suffix.
+    User name has to be non-empty, alphanumeric-only,
+    and space allowed only if it is not as the prefix or suffix.
     '''
-    pass
+
+    assert register('user', 'ValidUser@test.com', '@Password') is True
+    assert register(' ', 'SpaceUser@test.com', '@password') is False
+    assert register('user@', 'SpecialPassword@test.com', '@PASSWORD') is False
+    assert register(' user', 'SpaceFirst@test.com', 'Password') is False
+    assert register('user ', 'SpaceLast@test.com', 'Password') is False
 
 
 def test_r1_6_user_register():
@@ -59,10 +64,14 @@ def test_r1_6_user_register():
     and less than 20 characters.
     '''
 
-    assert register('2c', '2characters@test.com', '@Password') is True
-    assert register('exactly20characterss', '20characters@test.com', '@Password') is True
-    assert register('within2and20char', 'lessthan20and2@test.com', '@Password') is True
-    assert register('longerthan20characters', 'morethan20@test.com', '@Password') is False
+    assert register('2c', '2characters@test.com',
+                    '@Password') is True
+    assert register('exactly20characterss', '20characters@test.com',
+                    '@Password') is True
+    assert register('within2and20char', 'lessthan20and2@test.com',
+                    '@Password') is True
+    assert register('longerthan20characters', 'morethan20@test.com',
+                    '@Password') is False
     assert register('1', '1character@test.com', '@Password') is False
 
 
@@ -71,9 +80,9 @@ def test_r1_7_user_register():
     Testing R1-7: If the email has been used, the operation failed.
     '''
 
-    assert register('user0', 'same.email@test.com', '@Password') is True
-    assert register('user1', 'unique@test.com', '@Password') is True
-    assert register('user1', 'same.email@test.com', '@Password') is False
+    assert register('user', 'same.email@test.com', '@Password') is True
+    assert register('user', 'unique@test.com', '@Password') is True
+    assert register('user', 'same.email@test.com', '@Password') is False
 
 
 def test_r1_8_user_register():
@@ -81,7 +90,7 @@ def test_r1_8_user_register():
     Testing R1-8: Shipping address is empty at the time of registration.
     '''
 
-    register('ShippingUser', 'shipping@test.com', '@Password')
+    register('user', 'shipping@test.com', '@Password')
     user = login('shipping@test.com', '@Password')
     assert user.shipping_address is None
 
@@ -91,7 +100,7 @@ def test_r1_9_user_register():
     Testing R1-9: Postal code is empty at the time of registration.
     '''
 
-    register('PostalUser', 'postal@test.com', '@Password')
+    register('user', 'postal@test.com', '@Password')
     user = login('postal@test.com', '@Password')
     assert user.postal_code is None
 
@@ -124,3 +133,23 @@ def test_r2_1_login():
 
     user = login('notemail@test.com', '@Password')
     assert user is None
+
+
+def test_r2_2_login():
+    '''
+    Testing R2-2: The login function should check if the supplied 
+    inputs meet the same email/password requirements as above, 
+    before checking the database.
+    '''
+
+    assert login('', '@Password') is None
+    assert login('badpassword@test.com', '') is None
+    assert login('', '') is None
+
+    assert login('lowercasePassword@test.com', '@password') is None
+    assert login('uppercasePassword@test.com', '@PASSWORD') is None
+    assert login('specialPassword@test.com', 'Password') is None
+
+    user = login('Balance.Test@test.com', '@Password')
+    assert user is not None
+    assert user.username == 'BalanceUser'

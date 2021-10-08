@@ -24,7 +24,6 @@ class User(db.Model):
     shipping_address = db.Column(db.String(120), nullable=True)
     postal_code = db.Column(db.String(120), nullable=True)
     balance = db.Column(db.Float, unique=False, nullable=True)
-    
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -35,20 +34,7 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
-
-    # # Remaining Tom Code from Assignment/Sprint 1 for Products Below
-
-    # # The name of the product. Can not be null
-    # name = db.Column(db.String(100), unique=False, nullable=False)
-    # # The brand name of the product. Must be unique and can not be null
-    # brand = db.Column(db.String(100), unique=True, nullable=False)
-    # # The item type of the product. Can not be null
-    # item_type = db.Column(db.String(100), unique=False, nullable=False)
-    # # The amount of the product that exists. The value must be an integer.
-    # quantity = db.Column(db.Integer)
-    # # Special attributes of the given product (i.e phones have storage).
-    # attributes = db.Column(db.String(1000), unique=False, nullable=True)
-
+    
 
 """
 Lays out the attributes for reviews that verified users can place on products
@@ -112,15 +98,16 @@ def register(name, email, password):
     if len(existed) > 0:
         return False
     
-    # check if email or password are empty
-    if len(email.strip()) == 0 or len(password.strip()) == 0:
+    # check if email, password, or username are empty
+    if (len(email.strip()) == 0 or len(password.strip()) == 0 or 
+       len(name.strip()) == 0):
         return False
     
-    # check if username meets size requirment
+    # check if username between 2 and 20 characters
     if len(name) < 2 or len(name) > 20:
         return False
 
-    # check if password meets length requirment
+    # check if password is at least 6 characters long
     if len(password) < 6:
         return False
 
@@ -132,22 +119,32 @@ def register(name, email, password):
         ascii_value = ord(char)
         if (ascii_value >= 65) and (ascii_value <= 90):  # char is uppercase
             uppercase_count += 1
-        if (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
+        elif (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
             lowercase_count += 1
         # char is special character except space char
-        if ((ascii_value >= 33 and ascii_value <= 47) or 
-        (ascii_value >= 58 and ascii_value <= 64) or 
-        (ascii_value >= 123 and ascii_value <= 126)):
+        elif ((ascii_value >= 33 and ascii_value <= 47) or 
+              (ascii_value >= 58 and ascii_value <= 64) or 
+              (ascii_value >= 123 and ascii_value <= 126)):
             special_count += 1
+        else:
+            continue
 
     # check if password meets character requirments    
-    if ((uppercase_count == 0) or (lowercase_count == 0) 
-    or (special_count == 0)):
+    if (uppercase_count == 0 or lowercase_count == 0 or 
+       special_count == 0):
+        return False
+
+    # check if username contains space at begining or end
+    if (name[0] == ' ' or name[-1] == ' '):
+        return False
+    
+    # check if username contains only alphanumeric characters 
+    if (name.replace(' ', '').isalnum() is False):
         return False
 
     # create a new user
     user = User(username=name, email=email, password=password,
-        shipping_address=None, postal_code=None, balance=100)
+                shipping_address=None, postal_code=None, balance=100)
     # add it to the current database session
     db.session.add(user)
     # actually save the user object
@@ -168,11 +165,11 @@ def login(email, password):
 
     # check if email or password are empty
     if len(email.strip()) == 0 or len(password.strip()) == 0:
-        return False
+        return None
     
-    # check if email or password are empty
-    if len(email.strip()) == 0 or len(password.strip()) == 0:
-        return False
+    # check if password is at least 6 characters long
+    if len(password) < 6:
+        return None
 
     # counting upercase, lowercase, and special characters in supplied password
     uppercase_count = 0
@@ -182,18 +179,20 @@ def login(email, password):
         ascii_value = ord(char)
         if (ascii_value >= 65) and (ascii_value <= 90):  # char is uppercase
             uppercase_count += 1
-        if (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
+        elif (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
             lowercase_count += 1
         # char is special character except space char
-        if ((ascii_value >= 33 and ascii_value <= 47) or 
-        (ascii_value >= 58 and ascii_value <= 64) or 
-        (ascii_value >= 123 and ascii_value <= 126)):
+        elif ((ascii_value >= 33 and ascii_value <= 47) or 
+              (ascii_value >= 58 and ascii_value <= 64) or 
+              (ascii_value >= 123 and ascii_value <= 126)):
             special_count += 1
+        else:
+            continue
 
     # check if password meets character requirments    
-    if ((uppercase_count == 0) or 
-    (lowercase_count == 0) or (special_count == 0)):
-        return False
+    if (uppercase_count == 0 or lowercase_count == 0 or 
+       special_count == 0):
+        return None
 
     valids = User.query.filter_by(email=email, password=password).all()
     if len(valids) != 1:
