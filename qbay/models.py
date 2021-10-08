@@ -1,5 +1,6 @@
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
+import re
 
 
 '''
@@ -97,6 +98,15 @@ def register(name, email, password):
       Returns:
         True if registration succeeded otherwise False
     '''
+
+    validate_email = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+
+    if re.fullmatch(validate_email, email):
+        return True
+    else:
+        print(f"'{email}' is NOT a valid email")
+        return False
+
     # check if the email has been used:
     existed = User.query.filter_by(email=email).all()
     if len(existed) > 0:

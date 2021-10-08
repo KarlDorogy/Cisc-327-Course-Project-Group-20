@@ -28,7 +28,8 @@ def test_r1_3_user_register():
     '''
     The email has to follow addr-spec defined in RFC 5322 
     '''
-    pass
+    
+    assert register('testEmail', 'testemail.com', '@Password')
 
 
 def test_r1_4_user_register():
