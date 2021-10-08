@@ -46,20 +46,21 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
+    # The title of the product.
+    title = db.Column(db.String(1000), unique=False, nullable=False)
+    # The description of the product.
+    description = db.Column(db.String(1000), unique=False, nullable=True)
+    # The last modified date of the product.
+    last_modified_date = db.Column(db.String(1000), unique=False, nullable=True)
+    # The owner's email
+    owner_email = db.Column(db.String(1000), unique=False, nullable=False)
 
-    # # Remaining Tom Code from Assignment/Sprint 1 for Products Below
+def create_product(price, title, description, last_modified_date, owner_email):
 
-    # # The name of the product. Can not be null
-    # name = db.Column(db.String(100), unique=False, nullable=False)
-    # # The brand name of the product. Must be unique and can not be null
-    # brand = db.Column(db.String(100), unique=True, nullable=False)
-    # # The item type of the product. Can not be null
-    # item_type = db.Column(db.String(100), unique=False, nullable=False)
-    # # The amount of the product that exists. The value must be an integer.
-    # quantity = db.Column(db.Integer)
-    # # Special attributes of the given product (i.e phones have storage).
-    # attributes = db.Column(db.String(1000), unique=False, nullable=True)
+def update_product():
 
+
+   
 
 """
 Lays out the attributes for reviews that verified users can place on products
