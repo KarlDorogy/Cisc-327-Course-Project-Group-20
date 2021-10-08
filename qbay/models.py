@@ -1,5 +1,6 @@
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
+from datetime import date
 
 
 '''
@@ -54,13 +55,6 @@ class Product(db.Model):
     last_modified_date = db.Column(db.String(1000), unique=False, nullable=True)
     # The owner's email
     owner_email = db.Column(db.String(1000), unique=False, nullable=False)
-
-def create_product(price, title, description, last_modified_date, owner_email):
-
-def update_product():
-
-
-   
 
 """
 Lays out the attributes for reviews that verified users can place on products
@@ -118,6 +112,22 @@ class Transaction(db.Model):
 
 # create all tables
 db.create_all()
+
+def update_product(new_price, new_title, new_description, title):
+
+    existed_product = Product.query.filter_by(title=title)
+    existed_product.price = new_price
+    existed_product.description = new_description
+    existed_product.title = new_title
+
+    if(existed_product.price > new_price):
+        return False
+
+    today = date.today()
+    current_date = today.strftime("%d/%m/%Y")
+    existed_product.last_modified_date = current_date[7:10] + "-" + current_date[4:6] + "-" + current_date[0:3]
+
+    return True
 
 
 def register(name, email, password):
