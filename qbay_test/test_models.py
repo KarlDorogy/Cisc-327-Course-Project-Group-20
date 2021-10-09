@@ -152,3 +152,16 @@ def test_r2_2_login():
     user = login('Balance.Test@test.com', '@Password')
     assert user is not None
     assert user.username == 'BalanceUser'
+
+def test_r3_1_login():
+    register('RandomUser', 'update.Test@test.com', '@Password')
+    user = login('update.Test@test.com', '@Password')
+    assert user.username == 'RandomUser'
+    assert user.shipping_address is None
+    assert user.postal_code is None
+    update_user('update.Test@test.com', 'ModifiedUser', 
+                'ModifiedShipping', 'K7L 2H9')
+    user2 = login('update.Test@test.com', '@Password')
+    assert user2.username == 'ModifiedUser'
+    assert user.shipping_address == 'ModifiedShipping'
+    assert user.postal_code == 'K7L 2H9'

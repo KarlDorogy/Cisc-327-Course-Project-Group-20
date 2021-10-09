@@ -89,13 +89,20 @@ def register(name, email, password):
     if len(existed) > 0:
         return False
     
-    # check if email, password, or username are empty
-    if (len(email.strip()) == 0 or len(password.strip()) == 0 or 
-       len(name.strip()) == 0):
+    # check if email or password are empty
+    if (len(email.strip()) == 0 or len(password.strip()) == 0):
         return False
     
-    # check if username between 2 and 20 characters
-    if len(name) < 2 or len(name) > 20:
+    # check if username is not between 2 and 20 characters or is empty 
+    if len(name.strip()) < 2 or len(name.strip()) > 20:
+        return False
+    
+    # check if username contains space at begining or end
+    if (name[0] == ' ' or name[-1] == ' '):
+        return False
+    
+    # check if username contains only alphanumeric characters 
+    if (name.replace(' ', '').isalnum() is False):
         return False
 
     # check if password is at least 6 characters long
@@ -125,14 +132,6 @@ def register(name, email, password):
        special_count == 0):
         return False
 
-    # check if username contains space at begining or end
-    if (name[0] == ' ' or name[-1] == ' '):
-        return False
-    
-    # check if username contains only alphanumeric characters 
-    if (name.replace(' ', '').isalnum() is False):
-        return False
-
     # create a new user
     user = User(username=name, email=email, password=password,
                 shipping_address=None, postal_code=None, balance=100)
@@ -154,6 +153,7 @@ def login(email, password):
         The user object if login succeeded otherwise None
     '''
 
+    
     # check if email or password are empty
     if len(email.strip()) == 0 or len(password.strip()) == 0:
         return None
@@ -192,5 +192,36 @@ def login(email, password):
     return valids[0]
 
 
-def update_user(name, shipping_address, postal_code):
-    pass
+def update_user(find_email, new_name=None, 
+                new_shipping_address=None, new_postal_code=None):
+
+    modify_user = User.query.filter_by(email=find_email)
+
+    if (new_name is not None):
+        # check if username is not between 2 and 20 characters or is empty 
+        if (len(new_name.strip()) < 2 or len(new_name.strip()) > 20):
+            return False
+        # check if username contains space at begining or end
+        elif (new_name[0] == ' ' or new_name[-1] == ' '):
+            return False
+    
+        # check if username contains only alphanumeric characters 
+        elif (new_name.replace(' ', '').isalnum() is False):
+            return False
+        else:
+            modify_user.update({User.username: new_name})
+
+    if (new_shipping_address is not None):
+        # check if new shipping address contains only alphanumeric characters 
+        if (new_shipping_address.strip() == 0):
+            return False
+        # check if new shipping address is non-empty
+        elif (new_shipping_address.isalnum() is False):
+            return False
+        else:
+            modify_user.update({User.shipping_address: new_shipping_address}) 
+
+    if (new_postal_code is not None):
+        modify_user.update({User.postal_code: new_postal_code})
+
+    return True
