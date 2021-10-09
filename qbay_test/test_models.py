@@ -167,6 +167,7 @@ def test_r2_2_login():
     assert user is not None
     assert user.username == 'BalanceUser'
 
+
 def test_r3_1_login():
     register('RandomUser', 'update.Test@test.com', '@Password')
     user = login('update.Test@test.com', '@Password')

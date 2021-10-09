@@ -85,25 +85,6 @@ def register(name, email, password):
         True if registration succeeded otherwise False
     '''
 
-    if '@' not in email:
-        return False
-
-    email_parts = email.split('@')
-    local = email_parts[0]
-    domain = email_parts[1]
-    
-    validate_local = re.compile(
-        r"^(?=.{1,64}$)(?![.])(?!.*?[.]{2})(?!.*[.]$)[a-zA-Z0-9_.+-]+$")
-
-    validate_domain = re.compile(
-        r"^(?=.{1,63}$)(?![-])(?!.*[-])[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-
-    if re.fullmatch(validate_local, local) is None:
-        return False
-
-    if re.fullmatch(validate_domain, domain) is None:
-        return False
-    
     # check if the email has been used:
     existed = User.query.filter_by(email=email).all()
     if len(existed) > 0:
@@ -123,6 +104,25 @@ def register(name, email, password):
     
     # check if username contains only alphanumeric characters 
     if (name.replace(' ', '').isalnum() is False):
+        return False
+    
+    if '@' not in email:
+        return False
+
+    email_parts = email.split('@')
+    local = email_parts[0]
+    domain = email_parts[1]
+    
+    validate_local = re.compile(
+        r"^(?=.{1,64}$)(?![.])(?!.*?[.]{2})(?!.*[.]$)[a-zA-Z0-9_.+-]+$")
+
+    validate_domain = re.compile(
+        r"^(?=.{1,63}$)(?![-])(?!.*[-])[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+
+    if re.fullmatch(validate_local, local) is None:
+        return False
+
+    if re.fullmatch(validate_domain, domain) is None:
         return False
 
     # check if password is at least 6 characters long
@@ -172,8 +172,7 @@ def login(email, password):
       Returns:
         The user object if login succeeded otherwise None
     '''
-
-    
+ 
     # check if email or password are empty
     if len(email.strip()) == 0 or len(password.strip()) == 0:
         return None
