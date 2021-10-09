@@ -85,14 +85,25 @@ def register(name, email, password):
         True if registration succeeded otherwise False
     '''
 
-    validate_email = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-
-    if re.fullmatch(validate_email, email):
-        return True
-    else:
-        print(f"'{email}' is NOT a valid email")
+    if '@' not in email:
         return False
 
+    email_parts = email.split('@')
+    local = email_parts[0]
+    domain = email_parts[1]
+    
+    validate_local = re.compile(
+        r"^(?=.{1,64}$)(?![.])(?!.*?[.]{2})(?!.*[.]$)[a-zA-Z0-9_.+-]+$")
+
+    validate_domain = re.compile(
+        r"^(?=.{1,63}$)(?![-])(?!.*[-])[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+
+    if re.fullmatch(validate_local, local) is None:
+        return False
+
+    if re.fullmatch(validate_domain, domain) is None:
+        return False
+    
     # check if the email has been used:
     existed = User.query.filter_by(email=email).all()
     if len(existed) > 0:
