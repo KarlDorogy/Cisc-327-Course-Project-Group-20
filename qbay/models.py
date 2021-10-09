@@ -223,7 +223,6 @@ def update_user(find_email, new_name=None,
         # check if username contains space at begining or end
         elif (new_name[0] == ' ' or new_name[-1] == ' '):
             return False
-    
         # check if username contains only alphanumeric characters 
         elif (new_name.replace(' ', '').isalnum() is False):
             return False

@@ -65,10 +65,11 @@ def test_r1_5_user_register():
     '''
 
     assert register('user', 'ValidUser@test.com', '@Password') is True
-    assert register(' ', 'SpaceUser@test.com', '@password') is False
+    assert register(' ', 'SpaceUser@test.com', '@Password') is False
     assert register('user@', 'SpecialPassword@test.com', '@PASSWORD') is False
-    assert register(' user', 'SpaceFirst@test.com', 'Password') is False
-    assert register('user ', 'SpaceLast@test.com', 'Password') is False
+    assert register(' user', 'SpaceFirst@test.com', '@Password') is False
+    assert register('user ', 'SpaceLast@test.com', '@Password') is False
+    assert register('us er', 'SpaceMiddle@test.com', '@Password') is True
 
 
 def test_r1_6_user_register():
@@ -151,8 +152,8 @@ def test_r2_1_login():
 def test_r2_2_login():
     '''
     Testing R2-2: The login function should check if the supplied 
-    inputs meet the same email/password requirements as above, 
-    before checking the database.
+    inputs meet the same email/password requirements in the register 
+    function, before checking the database.
     '''
 
     assert login('', '@Password') is None
@@ -168,15 +169,56 @@ def test_r2_2_login():
     assert user.username == 'BalanceUser'
 
 
-def test_r3_1_login():
+def test_r3_1_update():
+    '''
+    Testing R3-1: A user is only able to update his/her user name, 
+    shipping_address, and postal_code.
+    '''
+
     register('RandomUser', 'update.Test@test.com', '@Password')
     user = login('update.Test@test.com', '@Password')
     assert user.username == 'RandomUser'
     assert user.shipping_address is None
     assert user.postal_code is None
-    update_user('update.Test@test.com', 'ModifiedUser', 
-                'ModifiedShipping', 'K7L 2H9')
+    assert update_user('update.Test@test.com', 'ModifiedUser', 
+                       'ModifiedShipping', 'K7L 2H9') is True
     user2 = login('update.Test@test.com', '@Password')
     assert user2.username == 'ModifiedUser'
     assert user.shipping_address == 'ModifiedShipping'
     assert user.postal_code == 'K7L 2H9'
+
+
+def test_r3_2_update():
+    '''
+    Testing R3-2: Shipping_address should be non-empty, alphanumeric-only, 
+    and no special characters such as !
+    '''
+
+    assert update_user('update.Test@test.com', 'alphanumeric12only') is True
+    assert update_user('update.Test@test.com', '',) is False
+    assert update_user('update.Test@test.com', 'specialchars!@}') is False
+
+
+def test_r3_4_update():
+    '''
+    Testing R3-4: User name has to be non-empty, alphanumeric-only, 
+    and space allowed only if it is not as the prefix or suffix.
+    User name also has to be longer than 2 characters and less 
+    than 20 characters.
+    '''
+
+    assert update_user('update.Test@test.com', 'ValidName') is True
+    assert update_user('update.Test@test.com', '',) is False
+    assert update_user('update.Test@test.com', 'user@}') is False
+    assert update_user('update.Test@test.com', ' user',) is False
+    assert update_user('update.Test@test.com', 'user ',) is False
+    assert update_user('update.Test@test.com', 'us er',) is True
+    assert update_user('update.Test@test.com', '2c') is True
+    assert update_user('update.Test@test.com', 
+                       'exactly20characterss') is True
+    assert update_user('update.Test@test.com',
+                       'within2and20char') is True
+    assert update_user('update.Test@test.com',
+                       'longerthan20characters') is False
+    assert update_user('update.Test@test.com',
+                       '1') is False
