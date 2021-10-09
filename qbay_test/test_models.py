@@ -199,6 +199,22 @@ def test_r3_2_update():
     assert update_user('update.Test@test.com', 'specialchars!@}') is False
 
 
+def test_r3_3_update():
+    '''
+    Testing R3-3: Postal code must be a valid Canadian postal code
+    '''
+
+    assert update_user('update.Test@test.com', None, None, 'M1C 8X3') is True
+    assert update_user('update.Test@test.com', None, None, 'm1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'D1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'F1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'I1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'O1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'Q1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'U1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'Z1C 8X3') is False
+
+
 def test_r3_4_update():
     '''
     Testing R3-4: User name has to be non-empty, alphanumeric-only, 

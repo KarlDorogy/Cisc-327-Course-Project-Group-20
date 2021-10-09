@@ -240,6 +240,14 @@ def update_user(find_email, new_name=None,
             modify_user.update({User.shipping_address: new_shipping_address}) 
 
     if (new_postal_code is not None):
+
+        validate_postal = re.compile(r"[ABCEGHJKLMNPRSTVXY]\d"
+                                     r"[ABCEGHJKLMNPRSTVXY][\s]?\d"
+                                     r"[ABCEGHJKLMNPRSTVXY]\d")
+            
+        if re.fullmatch(validate_postal, new_postal_code) is None:
+            return False
+
         modify_user.update({User.postal_code: new_postal_code})
 
     return True
