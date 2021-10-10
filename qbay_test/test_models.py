@@ -37,7 +37,17 @@ def test_r1_3_user_register():
     assert register('u5', '''yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
     yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyys@test.com''', '@Password') is False
     assert register('user', '', '@Password') is False
-
+    assert register('testEmail', 't!est.gg@mail.com', '@Password') is True
+    assert register('testEmail', 't*est.gg@mail.com', '@Password') is True
+    assert register('testEmail', '#est.gg@mail.com', '@Password') is True
+    assert register('testEmail', '{t_est}.gg@mail.com', '@Password') is True
+    assert register('testEmail', '"t!st.gg"@mail.com', '@Password') is True
+    assert register('testEmail', '\" \"@mail.com', '@Password') is True
+    assert register('testEmail', '"t!e"st.gg@mail.com', '@Password') is False
+    assert register('testEmail', '"t!e"st.gg@mail.com', '@Password') is False
+    assert register('testEmail', '"t!e"st" ".gg@ma.com', '@Password') is False
+    assert register('testEmail', '""@mail.com', '@Password') is False
+    
     assert register('testEmail', 'test@-mail.com', '@Password') is False
     assert register('testEmail', 'test.@mail.com-', '@Password') is False
     assert register('u5', '''test@yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
