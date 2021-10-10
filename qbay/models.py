@@ -107,7 +107,7 @@ def register(name, email, password):
     # check if username contains only alphanumeric characters 
     if (name.replace(' ', '').isalnum() is False):
         return False
-    email = email.strip()
+    
     # splits email address by @, left assigned to local, right assigned
     # to domain
     if '@' not in email:
