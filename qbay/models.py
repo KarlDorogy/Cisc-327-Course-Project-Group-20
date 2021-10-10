@@ -99,8 +99,6 @@ def update_product(new_price, new_title, new_description, title):
 
 def create_product(price, title, description, last_modified_date, owner_email):
     
-    # checks
-
     for character in title:
         if character.isdigit():
             return False
@@ -110,10 +108,6 @@ def create_product(price, title, description, last_modified_date, owner_email):
         if title.index(character) == title.len():
             if character == " ":
                 return False
-        ascii_val = ord(character)
-        if ((ascii_val >= 33 and ascii_val <= 47) or (ascii_val >= 58 and ascii_val <= 64) or (ascii_val >= 123 and ascii_val <= 126)):
-            return False
-
 
     if title.len() > 80:
         return False
@@ -163,7 +157,6 @@ def create_product(price, title, description, last_modified_date, owner_email):
     
     new_product = Product(price, title, description, last_modified_date, owner_email)
     db.session.add(new_product)
-    db.session.commit()
 
     return True 
 
