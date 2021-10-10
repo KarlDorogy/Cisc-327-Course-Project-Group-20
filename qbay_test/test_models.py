@@ -1,4 +1,4 @@
-from qbay.models import register, login, update_user
+from qbay.models import create_product, register, login, update_user
 
 
 def test_r1_1_user_register():
@@ -221,3 +221,11 @@ def test_r3_4_update():
                        'longerthan20characters') is False
     assert update_user('update.Test@test.com',
                        '1') is False
+
+def test_r5_1_update_product():
+  '''
+  Testing R5-1: One can update all attributes of the product, except owner_email and last_modified_date.
+  '''
+  old_product = create_product(30, "Mouse", "Computer Peripheral", "2021-02-04", "CoolGuy34@gmail.com")
+  assert update_product(40, "MousePad", "Pad For Mouse", "2021-02-04", "CoolGuy34@gmail.com") is False
+  
