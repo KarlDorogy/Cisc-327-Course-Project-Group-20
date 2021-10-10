@@ -1,5 +1,7 @@
 from qbay.models import register, login, update_user
 
+long_str = 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyysyyyyyyyyyyyyyyyyyyyyyyyyyyyy'
+
 
 def test_r1_1_user_register():
     '''
@@ -34,8 +36,7 @@ def test_r1_3_user_register():
     assert register('testEmail', '.test@mail.com', '@Password') is False
     assert register('testEmail', 'test.@mail.com', '@Password') is False
     assert register('testEmail', 'test.gg@mail.com', '@Password') is True
-    assert register('u5', '''yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-    yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyys@test.com''', '@Password') is False
+    assert register('u5', long_str + '@test.com', '@Password') is False
     assert register('user', '', '@Password') is False
     assert register('testEmail', 't!est.gg@mail.com', '@Password') is True
     assert register('testEmail', 't*est.gg@mail.com', '@Password') is True
@@ -51,8 +52,7 @@ def test_r1_3_user_register():
     # domain tests
     assert register('testEmail', 'test@-mail.com', '@Password') is False
     assert register('testEmail', 'test.@mail.com-', '@Password') is False
-    assert register('u5', '''test@yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-    yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy.com''', '@Password') is False
+    assert register('u5', 'test@' + long_str + '.com', '@Password') is False
     assert register('testEmail', 'test.@ma..il.com', '@Password') is False
     assert register('testEmail', 'WOW@[192.168.2.1]', '@Password') is True
     assert register('testEmail', 'regexL@[192.300.2.1]', '@Password') is False
