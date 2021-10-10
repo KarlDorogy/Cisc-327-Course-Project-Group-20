@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 import re
 
+
 '''
 This file defines data models and related business logics
 '''
@@ -105,22 +106,24 @@ def create_product(price, title, description, last_modified_date, owner_email):
         if title.index(character) == 0:
             if character == " ":
                 return False
-        if title.index(character) == title.len():
+        if title.index(character) == len(title)-1:
             if character == " ":
                 return False
-
-    if title.len() > 80:
+        ascii_value = ord(character)
+        if ((ascii_value >= 33 and ascii_value <= 47) or (ascii_value >= 58 and ascii_value <= 64) or (ascii_value >= 123 and ascii_value <= 126)):
+            return False
+    
+    if len(title) > 80:
         return False
     
-    if description.len() < 20 or description.len() > 2000 or description.len() <= title.len():
+    if len(description) < 20 or len(description) > 2000 or len(description) <= len(title):
         return False
 
     if price < 10 or price > 10000:
         return False
     
-    if last_modified_date.index(4) or last_modified_date.index(7) != "-":
+    if last_modified_date[4] != "-" or last_modified_date[7] != "-":
         return False
-    
     last_modified_year = int(last_modified_date[0:4])
     if last_modified_year < 2021 or last_modified_year > 2025:
         return False
@@ -151,12 +154,13 @@ def create_product(price, title, description, last_modified_date, owner_email):
         return False
     
     existed_titles = Product.query.filter_by(title=title).all()
-    if len(existed_titles) > 1:
+    if len(existed_titles) >= 1:
         return False
     print(existed_titles)
     
-    new_product = Product(price, title, description, last_modified_date, owner_email)
+    new_product = Product(price=price, title=title, description=description, last_modified_date=last_modified_date, owner_email=owner_email)
     db.session.add(new_product)
+    db.session.commit()
 
     return True 
 
