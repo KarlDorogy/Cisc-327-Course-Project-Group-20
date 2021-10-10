@@ -108,6 +108,8 @@ def register(name, email, password):
     if (name.replace(' ', '').isalnum() is False):
         return False
     
+    # splits email address by @, left assigned to local, right assigned
+    # to domain
     if '@' not in email:
         return False
 
@@ -115,33 +117,110 @@ def register(name, email, password):
     local = email_parts[0]
     domain = email_parts[1]
 
+    # checks there are no double quotes before running dot-string validation
+    # regex
     if local.find('\"') == -1:
+
+        # This regex checks 5 criteria: the expression is between 1-64
+        # characters, does not start or end with a dot '.', there are no
+        # consecutive dots and the name is made of alphanumeric and specific
+        # special/printable characters
         validate_local = re.compile(
-            r"^(?=.{1,64}$)(?![.])(?!.*?[.]{2})(?!.*[.]$)"
-            r"[a-zA-Z0-9!#$%&*+-/=?^_`{|}~]+$")
+            r"^(?=.{1,64}$)(?![.])(?!.*[.]$)(?!.*?[.]{2})"
+            r"[\w!#$%&*+-/=?^`{|}~]+$")
         
+        # if local is not a perfect match against validate_local, it is an
+        # invalid name
         if re.fullmatch(validate_local, local) is None:
             return False
     
+    # checks local name against quoted-string regex if the first and last
+    # characters are double quotes. The regex checks the quoted string is
+    # between 1-62 characters because an empty string is not valid and the
+    # first and last characters are double quotes ' " '
     elif local.find('\"') == 0 and local.find('\"', 1) == len(local) - 1:
-        print('found quotes')
-        validate_local_q = re.compile(r"^(?=.{3,64}$)([^\"]*\"[^\"]*){0,2}"
-                                      r"[\w\s!#$%&*+-/=?^\"`{|}~(),:;<>@[\]]+$"
-                                      )
 
-        if re.fullmatch(validate_local_q, local) is None:
+        # This regex checks the quoted string is made of alphanumeric
+        # characters, most printable characters and special characters.
+        # There is no limitation on repetition
+        validate_local = re.compile(r"^(?=.{1,62}$)"
+                                    r"[\w\s!#$%&*+-/=?^\"`{|}~(),:;<>@[\]]+$"
+                                    )
+
+        # if local is not a perfect match against validate_local, it is an
+        # invalid name
+        if re.fullmatch(validate_local, local[1:-1]) is None:
             return False
     
     else:
-        print('''A local part is either a Dot-string or a Quoted-string; 
-        it cannot be a combination.''')
+
+        # informs user that local names cannot contain both quoted and
+        # unquoted text
+        print('''An email local name is either a Dot-string or a 
+        Quoted-string; it cannot be a combination.''')
         return False
 
-    validate_domain = re.compile(
-        r"^(?=.{1,63}$)(?![-])(?!.*[-])[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+    # if domain starts with '[' and ends with ']' it gets checked against
+    # IPv4 and IPv6 domain rules. Dual addresses fail check.
+    if domain.find('[') == 0 and domain.find(']', -1) == len(domain) - 1:
 
-    if re.fullmatch(validate_domain, domain) is None:
-        return False
+        # validates normal IPv4 and IPv6 addresses
+        validate_domain = re.compile("(?=.{1,39}$)(((25[0-5]|2[0-4][0-9]|[01]?"
+                                     "[0-9][0-9]?)[.]){3}(25[0-5]|2[0-4][0-9]|"
+                                     "[01]?[0-9][0-9]?))"
+
+                                     # if the string doesn't match against IPv4 
+                                     # rules, check against IPv6 rules
+                                     "|"
+
+                                     # validates normal IPv6 addresses
+                                     "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]"
+                                     "{1,4}|"
+                                     "([0-9a-fA-F]{1,4}:){1,7}:|"
+                                     "([0-9a-fA-F]{1,4}:){1,6}:"
+                                     "[0-9a-fA-F]{1,4}|"
+                                     "([0-9a-fA-F]{1,4}:){1,5}"
+                                     "(:[0-9a-fA-F]{1,4}){1,2}|"
+                                     "([0-9a-fA-F]{1,4}:){1,4}"
+                                     "(:[0-9a-fA-F]{1,4}){1,3}|"
+                                     "([0-9a-fA-F]{1,4}:){1,3}"
+                                     "(:[0-9a-fA-F]{1,4}){1,4}|"
+                                     "([0-9a-fA-F]{1,4}:){1,2}"
+                                     "(:[0-9a-fA-F]{1,4}){1,5}|"
+                                     "[0-9a-fA-F]{1,4}:"
+                                     "((:[0-9a-fA-F]{1,4}){1,6})|"
+                                     ":((:[0-9a-fA-F]{1,4}){1,7}|:)|"
+                                     "fe80:(:[0-9a-fA-F]{0,4}){0,4}%"
+                                     "[0-9a-zA-Z]{1,}|"
+                                     "::(ffff(:0{1,4}){0,1}:){0,1}"
+                                     "((25[0-5]|(2[0-4]|1{0,1}[0-9])"
+                                     "{0,1}[0-9])[.]{3,3}"
+                                     "(25[0-5]|(2[0-4]|1{0,1}[0-9])"
+                                     "{0,1}[0-9])|"
+                                     "([0-9a-fA-F]{1,4}:){1,4}:"
+                                     "((25[0-5]|(2[0-4]|1{0,1}[0-9])"
+                                     "{0,1}[0-9])[.]){3,3}"
+                                     "(25[0-5]|(2[0-4]|1{0,1}[0-9])"
+                                     "{0,1}[0-9])))")
+
+        # if domain is not a perfect match against validate_domain, it is an
+        # invalid address
+        if re.fullmatch(validate_domain, domain[1:-1]) is None:
+            return False
+
+    # checks the domain against LDH domain rules
+    else:
+        validate_domain = re.compile(
+            # checks the domain for five criteria: it is between 1 and 63
+            # characters long, it does not start or end with a hyphen '-',
+            # there is one dot '.', and every other character is
+            # a-z, A-Z, 0-9, -, or . for subdomains
+            r"^(?=.{1,63}$)(?![-])(?!.*[-])[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+
+        # if domain is not a perfect match against validate_domain, it is an
+        # invalid address
+        if re.fullmatch(validate_domain, domain) is None:
+            return False
 
     # check if password is at least 6 characters long
     if len(password) < 6:
@@ -259,10 +338,15 @@ def update_user(find_email, new_name=None,
 
     if (new_postal_code is not None):
 
+        # validate_postal checks a string follows the format
+        # x0x 0x0 where x is one of A,B,C,E,G,H,J,K,L,M,N,P,R,S,T,V,X,Y
+        # and 0 is any digit from 0-9
         validate_postal = re.compile(r"[ABCEGHJKLMNPRSTVXY]\d"
                                      r"[ABCEGHJKLMNPRSTVXY][\s]?\d"
                                      r"[ABCEGHJKLMNPRSTVXY]\d")
             
+        # if new_postal_code is not a perfect match against
+        # validate_postal, it is not a valid Canadian postal code
         if re.fullmatch(validate_postal, new_postal_code) is None:
             return False
 
