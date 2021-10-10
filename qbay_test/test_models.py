@@ -1,4 +1,4 @@
-from qbay.models import register, login
+from qbay.models import *
 
 
 def test_r1_7_user_register():
@@ -25,3 +25,10 @@ def test_r2_1_login():
 
     user = login('test0@test.com', 1234567)
     assert user is None
+
+def test_r4_1_product():
+    assert create_product(100, "iPhone 10", "very expensive", "2021-02-17", "iPhoneFan@gmail.com") is True
+    assert create_product(100, " iPhone 10", "very expensive", "2021-02-17", "iPhoneFan@gmail.com") is False
+    assert create_product(100, "iPhone 10 ", "very expensive", "2021-02-17", "iPhoneFan@gmail.com") is False
+    assert create_product(100, "iPhone 10$$$", "very expensive", "2021-02-17", "iPhoneFan@gmail.com") is False
+
