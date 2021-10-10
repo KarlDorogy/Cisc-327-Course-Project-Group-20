@@ -244,12 +244,13 @@ def register(name, email, password):
         else:
             continue
 
-    # check if password meets character requirments    
+    # check if password has at least one upercase, lowercase, and 
+    # special characters in supplied password 
     if (uppercase_count == 0 or lowercase_count == 0 or 
        special_count == 0):
         return False
 
-    # create a new user
+    # creates a new user
     user = User(username=name, email=email, password=password,
                 shipping_address=None, postal_code=None, balance=100)
     # add it to the current database session
@@ -296,11 +297,13 @@ def login(email, password):
         else:
             continue
 
-    # check if password meets character requirments    
+    # check if password has at least one upercase, lowercase, and 
+    # special characters in supplied password    
     if (uppercase_count == 0 or lowercase_count == 0 or 
        special_count == 0):
         return None
 
+    # Finds and returns user in database
     valids = User.query.filter_by(email=email, password=password).all()
     if len(valids) != 1:
         return None
@@ -310,9 +313,20 @@ def login(email, password):
 
 def update_user(find_email, new_name=None, 
                 new_shipping_address=None, new_postal_code=None):
+    '''
+    updates a existing user
+      Parameters:
+        find_email (string):    user email
+        new_name (string):    modified username
+        new_shipping_address (string): modified shipping address
+        new_postal_code (string): modified postal code
+      Returns:
+        True if updating user info succeeded otherwise False
+    '''
 
     modify_user = User.query.filter_by(email=find_email)
 
+    # Updating Username 
     if (new_name is not None):
         # check if username is not between 2 and 20 characters or is empty 
         if (len(new_name.strip()) < 2 or len(new_name.strip()) > 20):
@@ -326,6 +340,7 @@ def update_user(find_email, new_name=None,
         else:
             modify_user.update({User.username: new_name})
 
+    # Updating Shipping address 
     if (new_shipping_address is not None):
         # check if new shipping address contains only alphanumeric characters 
         if (new_shipping_address.strip() == 0):
@@ -336,6 +351,7 @@ def update_user(find_email, new_name=None,
         else:
             modify_user.update({User.shipping_address: new_shipping_address}) 
 
+    # Updating Postal Code
     if (new_postal_code is not None):
 
         # validate_postal checks a string follows the format

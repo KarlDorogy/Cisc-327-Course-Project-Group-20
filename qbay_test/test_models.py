@@ -23,7 +23,6 @@ def test_r1_2_user_register():
     assert user.password == '@Password'
 
 
-# NEEDS TO GET DONE
 def test_r1_3_user_register():
     '''
     The email has to follow addr-spec defined in RFC 5322
