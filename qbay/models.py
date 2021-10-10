@@ -1,3 +1,5 @@
+from operator import contains
+from os import error
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
 import re
@@ -112,15 +114,31 @@ def register(name, email, password):
     email_parts = email.split('@')
     local = email_parts[0]
     domain = email_parts[1]
+
+    if local.find('\"') == -1:
+        validate_local = re.compile(
+            r"^(?=.{1,64}$)(?![.])(?!.*?[.]{2})(?!.*[.]$)"
+            r"[a-zA-Z0-9!#$%&*+-/=?^_`{|}~]+$")
+        
+        if re.fullmatch(validate_local, local) is None:
+            return False
     
-    validate_local = re.compile(
-        r"^(?=.{1,64}$)(?![.])(?!.*?[.]{2})(?!.*[.]$)[a-zA-Z0-9_.+-]+$")
+    elif local.find('\"') == 0 and local.find('\"', 1) == len(local) - 1:
+        print('found quotes')
+        validate_local_q = re.compile(r"^(?=.{3,64}$)([^\"]*\"[^\"]*){0,2}"
+                                      r"[\w\s!#$%&*+-/=?^\"`{|}~(),:;<>@[\]]+$"
+                                      )
+
+        if re.fullmatch(validate_local_q, local) is None:
+            return False
+    
+    else:
+        print('''A local part is either a Dot-string or a Quoted-string; 
+        it cannot be a combination.''')
+        return False
 
     validate_domain = re.compile(
         r"^(?=.{1,63}$)(?![-])(?!.*[-])[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-
-    if re.fullmatch(validate_local, local) is None:
-        return False
 
     if re.fullmatch(validate_domain, domain) is None:
         return False
