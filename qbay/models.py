@@ -375,4 +375,18 @@ def update_user(find_email, new_name=None,
     if (new_postal_code is not None):
         modify_user.update({User.postal_code: new_postal_code})
 
+        # Validate_postal checks a string follows the format
+        # x0x 0x0 where x is one of A,B,C,E,G,H,J,K,L,M,N,P,R,S,T,V,X,Y
+        # and 0 is any digit from 0-9
+        validate_postal = re.compile(r"[ABCEGHJKLMNPRSTVXY]\d"
+                                     r"[ABCEGHJKLMNPRSTVXY][\s]?\d"
+                                     r"[ABCEGHJKLMNPRSTVXY]\d")
+            
+        # If new_postal_code is not a perfect match against
+        # validate_postal, it is not a valid Canadian postal code
+        if re.fullmatch(validate_postal, new_postal_code) is None:
+            return False
+
+        modify_user.postal_code = new_postal_code
+
     return True

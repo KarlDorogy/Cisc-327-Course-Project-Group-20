@@ -1,5 +1,9 @@
 from qbay.models import (register, login, update_user,
-                         create_product, db)
+                         create_product, update_product, db)
+
+# Global variable to test max character length of email local and domain
+# while following Flake8 style guide (lines 79 characters or less)
+long_str = 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyysyyyyyyyyyyyyyyyyyyyyyyyyyyyy'
 
 
 def test_r1_1_user_register():
@@ -433,3 +437,70 @@ def test_r4_7_create_product():
                           "2021-02-17", "Bobby") is False
 
     clearTable()
+
+
+def test_r5_1_update_product():
+    '''
+    Testing R5-1: One can update all attributes of the product,
+    except owner_email and last_modified_date.
+    '''
+    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    create_product(1000, "iPhone", "This is a very very expensive phone",
+                   "2021-02-17", "iPhoneMan@phone.com")
+    assert update_product(
+        1000, "iPhoneTwo",
+        "This is a very very expensive phone", "iPhone") is True
+    assert update_product(
+        1000, "iPhoneThree",
+        "This is a very very expensive phone", "gjf") is False
+
+    clearTable()
+
+
+def test_r5_2_update_product():
+    '''
+    R5-2: Price can be only increased but cannot be decreased
+    '''
+    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    create_product(1000, "iPhone", "This is a very very expensive phone",
+                   "2021-02-17", "iPhoneMan@phone.com")
+    assert update_product(
+        1100, "iPhoneTwo",
+        "This is a very very expensive phone", "iPhone") is True
+    assert update_product(
+        900, "iPhoneThree",
+        "This is a very very expensive phone", "iPhone") is False
+
+    clearTable()
+
+
+def test_r5_4_update_product():
+    '''
+    R5-4: When updating an attribute,
+    one has to make sure that it follows the same requirements as above.
+    '''
+    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    create_product(1000, "iPhone", "This is a very very expensive phone",
+                   "2021-02-17", "iPhoneMan@phone.com")
+    assert update_product(
+        1100, "iPhoneTwo",
+        "This is a very very expensive phone", "iPhone") is True
+    assert update_product(
+        1000, "iPhoneThree",
+        "This is a very very expensive phone", "gjf") is False
+    assert update_product(
+        900, "iPhoneThree",
+        "This is a very very expensive phone", "iPhoneTwo") is False
+
+
+def test_r5_3_update_product():
+    '''
+    R5-3: last_modified_date should be updated when the
+    update operation is successful.
+    '''
+    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    create_product(1000, "iPhone", "This is a very very expensive phone",
+                   "2021-02-17", "iPhoneMan@phone.com")
+    assert update_product(
+        1100, "iPhoneTwo",
+        "This is a very very expensive phone", "iPhone") is True
