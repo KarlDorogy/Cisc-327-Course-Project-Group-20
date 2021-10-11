@@ -37,7 +37,15 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
-    
+    # The title of the product.
+    title = db.Column(db.String(80), unique=True, nullable=False)
+    # The description of the product.
+    description = db.Column(db.String(2000), unique=False, nullable=True)
+    # The last modified date of the product.
+    last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
+    # The owner's email
+    owner_email = db.Column(db.String(1000), unique=False, nullable=False)
+
 
 """
 Lays out the attributes for reviews that verified users can place on products
@@ -75,6 +83,7 @@ class Transaction(db.Model):
 
 # create all tables
 db.create_all()
+
 
 def update_product(new_price, new_title, new_description, title):
     # Checks if product exists

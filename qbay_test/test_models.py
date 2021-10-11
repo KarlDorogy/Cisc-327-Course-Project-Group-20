@@ -1,4 +1,5 @@
-from qbay.models import register, login, update_user, db
+from qbay.models import (register, login, update_user,
+                         create_product, update_product, db)
 
 long_str = 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyysyyyyyyyyyyyyyyyyyyyyyyyyyyyy'
 
@@ -544,3 +545,4 @@ def test_r5_3_update_product():
     assert update_product(
         1100, "iPhoneTwo",
         "This is a very very expensive phone", "iPhone") is True
+        
