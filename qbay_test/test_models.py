@@ -270,6 +270,8 @@ def test_r3_4_update_user():
                        'longerthan20characters') is False
     assert update_user('update.Test@test.com',
                        '1') is False
+
+
 # Used to clear the db table after each test
 
 
