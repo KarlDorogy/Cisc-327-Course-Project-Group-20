@@ -200,6 +200,7 @@ def test_r3_1_update():
     assert update_user('nonexsitant.user@test.com', 'ModifiedUser', 
                        'ModifiedShipping', 'K7L 2H9') is False
 
+
 def test_r3_2_update():
     '''
     Testing R3-2: Shipping_address should be non-empty, alphanumeric-only, 
