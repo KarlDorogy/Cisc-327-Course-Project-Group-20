@@ -1,6 +1,6 @@
 from qbay import app
-from flask_sqlalchemy import SQLAlchemy
 from datetime import date
+from flask_sqlalchemy import SQLAlchemy
 import re
 
 
@@ -84,27 +84,31 @@ db.create_all()
 
 
 def update_product(new_price, new_title, new_description, title):
+    # Checks if product exists
     check_exist = Product.query.filter_by(title=title).all()
     if len(check_exist) < 1:
         return False
 
+    # Sets the product being editted to existing_product
     existed_product = Product.query.filter_by(title=title).first()
     existed_product.description = new_description
     existed_product.title = new_title
 
+    # Checks if the new price is greater than the old price
     if(existed_product.price > new_price):
         return False
     existed_product.price = new_price
 
+    # Gets the current last modified date
     last_date = existed_product.last_modified_date
 
-    existed_product.price = new_price
-
+    # Sets the last modified date to current date
     today = date.today()
     current_date = today.strftime("%d/%m/%Y")
     existed_product.last_modified_date = current_date[7:10] + \
         "-" + current_date[4:6] + "-" + current_date[0:3]
 
+    # Checks if last modified date is still the last date
     if(existed_product.last_modified_date == last_date):
         return False
 
@@ -241,12 +245,12 @@ def register(name, email, password):
         validate_local = re.compile(
             r"^(?=.{1,64}$)(?![.])(?!.*[.]$)(?!.*?[.]{2})"
             r"[\w!#$%&*+-/=?^`{|}~]+$")
-        
+
         # If local is not a perfect match against validate_local, it is an
         # invalid name
         if re.fullmatch(validate_local, local) is None:
             return False
-    
+
     # Checks local name against quoted-string regex if the first and last
     # characters are double quotes. The regex checks the quoted string is
     # between 1-62 characters because an empty string is not valid and the
@@ -264,12 +268,12 @@ def register(name, email, password):
         # invalid name
         if re.fullmatch(validate_local, local[1:-1]) is None:
             return False
-    
+
     else:
 
         # Informs user that local names cannot contain both quoted and
         # unquoted text
-        print('''An email local name is either a Dot-string or a 
+        print('''An email local name is either a Dot-string or a
         Quoted-string; it cannot be a combination.''')
         return False
 
@@ -282,7 +286,7 @@ def register(name, email, password):
                                      "[0-9][0-9]?)[.]){3}(25[0-5]|2[0-4][0-9]|"
                                      "[01]?[0-9][0-9]?))"
 
-                                     # If the string doesn't match against IPv4 
+                                     # If the string doesn't match against IPv4
                                      # rules, check against IPv6 rules
                                      "|"
 
@@ -474,7 +478,7 @@ def update_user(find_email, new_name=None,
         validate_postal = re.compile(r"[ABCEGHJKLMNPRSTVXY]\d"
                                      r"[ABCEGHJKLMNPRSTVXY][\s]?\d"
                                      r"[ABCEGHJKLMNPRSTVXY]\d")
-            
+
         # If new_postal_code is not a perfect match against
         # validate_postal, it is not a valid Canadian postal code
         if re.fullmatch(validate_postal, new_postal_code) is None:

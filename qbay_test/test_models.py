@@ -32,7 +32,7 @@ def test_r1_3_user_register():
     '''
     The email has to follow addr-spec defined in RFC 5322
     '''
-    
+
     # local name tests
     assert register('testEmail', 'testemail@com', '@Password') is False
     assert register('testEmail', 'te..st@mail.com', '@Password') is False
@@ -59,15 +59,15 @@ def test_r1_3_user_register():
     assert register('testEmail', 'test.@ma..il.com', '@Password') is False
     assert register('testEmail', 'WOW@[192.168.2.1]', '@Password') is True
     assert register('testEmail', 'regexL@[192.300.2.1]', '@Password') is False
-    assert register('testEmail', '''WOW@[2001:db8:0:1234:0:567:8:1]''', 
+    assert register('testEmail', '''WOW@[2001:db8:0:1234:0:567:8:1]''',
                     '@Password') is True
     assert register('testEmail', 'WOW@[2001:db8::]', '@Password') is True
     assert register('testEmail', 'WOW@[::]', '@Password') is True
     assert register('testEmail', 'WOW@[::1234:5678]', '@Password') is True
-    assert register('testEmail', 
-                    '''WOW@[2001:0db8:0001:0000:0000:0ab9:C0A8:0102]''', 
+    assert register('testEmail',
+                    '''WOW@[2001:0db8:0001:0000:0000:0ab9:C0A8:0102]''',
                     '@Password') is True
-    assert register('testEmail', '''WOW@[::1234:5678:91.123.4.56]''', 
+    assert register('testEmail', '''WOW@[::1234:5678:91.123.4.56]''',
                     '@Password') is False
     assert register('testEmail', 'F@[IPv6:2001:db8::1]', '@Password') is False
 
@@ -263,7 +263,7 @@ def clearTable():
 
 
 def test_r4_8_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     create_product(1000, "Burrito", "This is a very very expensive Burrito",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert create_product(1000, "iPhone",
@@ -279,7 +279,7 @@ def test_r4_8_create_product():
 
 
 def test_r4_1_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -298,7 +298,7 @@ def test_r4_1_create_product():
 
 
 def test_r4_2_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -317,7 +317,7 @@ def test_r4_2_create_product():
 
 
 def test_r4_3_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -393,7 +393,7 @@ def test_r4_3_create_product():
 
 
 def test_r4_4_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -406,7 +406,7 @@ def test_r4_4_create_product():
 
 
 def test_r4_5_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -423,7 +423,7 @@ def test_r4_5_create_product():
 
 
 def test_r4_6_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -448,7 +448,7 @@ def test_r4_6_create_product():
 
 
 def test_r4_7_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -467,7 +467,7 @@ def test_r5_1_update_product():
     Testing R5-1: One can update all attributes of the product,
     except owner_email and last_modified_date.
     '''
-    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
     create_product(1000, "iPhone", "This is a very very expensive phone",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert update_product(
@@ -484,7 +484,7 @@ def test_r5_2_update_product():
     '''
     R5-2: Price can be only increased but cannot be decreased
     '''
-    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
     create_product(1000, "iPhone", "This is a very very expensive phone",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert update_product(
@@ -502,7 +502,7 @@ def test_r5_4_update_product():
     R5-4: When updating an attribute,
     one has to make sure that it follows the same requirements as above.
     '''
-    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
     create_product(1000, "iPhone", "This is a very very expensive phone",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert update_product(
@@ -521,7 +521,7 @@ def test_r5_3_update_product():
     R5-3: last_modified_date should be updated when the
     update operation is successful.
     '''
-    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
     create_product(1000, "iPhone", "This is a very very expensive phone",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert update_product(
