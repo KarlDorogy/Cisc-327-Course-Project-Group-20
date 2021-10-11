@@ -1,4 +1,4 @@
-from qbay.models import register, login, update_user
+from qbay.models import register, login, update_user, db
 
 long_str = 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyysyyyyyyyyyyyyyyyyyyyyyyyyyyyy'
 
@@ -267,3 +267,280 @@ def test_r3_4_update():
                        'longerthan20characters') is False
     assert update_user('update.Test@test.com',
                        '1') is False
+# Used to clear the db table after each test
+
+
+def clearTable():
+    meta = db.metadata
+    for table in reversed(meta.sorted_tables):
+        db.session.execute(table.delete())
+    db.session.commit()
+
+# Products can not have the same name
+
+
+def test_r4_8_create_product():
+    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    create_product(1000, "Burrito", "This is a very very expensive Burrito",
+                   "2021-02-17", "iPhoneMan@phone.com")
+    assert create_product(1000, "iPhone",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is True
+    assert create_product(1000, "Burrito",
+                          "This is a very very expensive Burrito",
+                          "2021-02-17", "iPhoneMan@phone.com") is False
+    clearTable()
+
+# Product names must be alphanuermic-only, and spaces allowed only if
+# it is not as a prefix and suffix
+
+
+def test_r4_1_create_product():
+    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    assert create_product(1000, "iPhone",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is True
+    assert create_product(1000, " iPhone",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is False
+    assert create_product(1000, "iPhone ",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is False
+    assert create_product(1000, "iPhone$$$$",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is False
+    clearTable()
+
+# Product names can not be too long
+
+
+def test_r4_2_create_product():
+    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    assert create_product(1000, "iPhone",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is True
+    assert create_product(1000, """kahdlkahdlkahdlkhakdhajdkshaldhadhahdlahdah
+    kdhadkljahdkljashdkahdhasdhakhdklsahkdahhdlahldasdasdskadkjalhdkjlashdklja
+    hdklashkdslahkadhkahdlkjahjd""",
+                          """kahdlkahdlkahdlkhakdhajdkshaldhadhahdlahdahkdhadk
+                          ljahdkljashdkahdhasdhakhdklsahkdahhdlahldasdasdskadk
+                          jalhdkjlashdkljahdklashkdslahkadhkahdlkjahjd
+    This is a very very expensive phone""", "2021-02-17",
+                          "iPhoneMan@phone.com") is False
+
+    clearTable()
+
+# Product descriptions can not be too long
+
+
+def test_r4_3_create_product():
+    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    assert create_product(1000, "iPhone",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is True
+    assert create_product(1000, "iPhoneTwo", "expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is False
+    assert create_product(1000, "iPhoneThree", """dkjalhdkljahdkljashdkahdjsha
+                         daljhdklsahdashdkahdahdalhkdajkndkjasldhaiyuodgwhadha
+                         iodnbkadwkjlsandklanxcjkahsdkahdwiuahdksdladjkadhaakd
+                         dkjalhdkljahdkljashdkahdjshadaljhdklsahdashdkahdahdal
+                         hkdajkndkjasldhaiyuodgwhadhaiodnbkadwkjlsandklanxcjka
+                         hsdkahdwiuahdksdladjkadhaakddkjalhdkljahdkljashdkahdj
+                         shadaljhdklsahdashdkahdahdalhkdajkndkjasldhaiyuodgwha
+                         dhaiodnbkadwkjlsandklanxcjkahsdkahdwiuahdksdladjkadha
+                         akddkjalhdkljahdkljashdkahdjshadaljhdklsahdashdkahdah
+                         dalhkdajkndkjasldhaiyuodgwhadhaiodnbkadwkjlsandklanxc
+                         jkahsdkahdwiuahdksdladjkadhaakddkjalhdkljahdkljashdka
+                         hdjshadaljhdklsahdashdkahdahdalhkdajkndkjasldhaiyuodg
+                         whadhaiodnbkadwkjlsandklanxcjkahsdkahdwiuahdksdladjka
+                         dhaakddkjalhdkljahdkljashdkahdjshadaljhdklsahdashdkah
+                         dahdalhkdajkndkjasldhaiyuodgwhadhaiodnbkadwkjlsandkla
+                         nxcjkahsdkahdwiuahdksdladjkadhaakddkjalhdkljahdkljash
+                         dkahdjshadaljhdklsahdashdkahdahdalhkdajkndkjasldhaiyu
+                         odgwhadhaiodnbkadwkjlsandklanxcjkahsdkahdwiuahdksdlad
+                         jkadhaakddkjalhdkljahdkljashdkahdjshadaljhdklsahdashd
+                         kahdahdalhkdajkndkjasldhaiyuodgwhadhaiodnbkadwkjlsand
+                         klanxcjkahsdkahdwiuahdksdladjkadhaakddkjalhdkljahdklj
+                         ashdkahdjshadaljhdklsahdashdkahdahdalhkdajkndkjasldha
+                         iyuodgwhadhaiodnbkadwkjlsandklanxcjkahsdkahdwiuahdksd
+                         ladjkadhaakddkjalhdkljahdkljashdkahdjshadaljhdklsahda
+                         shdkahdahdalhkdajkndkjasldhaiyuodgwhadhaiodnbkadwkjls
+                         andklanxcjkahsdkahdwiuahdksdladjkadhaakddkjalhdkljahd
+                         kljashdkahdjshadaljhdklsahdashdkahdahdalhkdajkndkjasl
+                         dhaiyuodgwhadhaiodnbkadwkjlsandklanxcjkahsdkahdwiuahd
+                         ksdladjkadhaakddkjalhdkljahdkljashdkahdjshadaljhdklsa
+                         hdashdkahdahdalhkdajkndkjasldhaiyuodgwhadhaiodnbkadwk
+                         jlsandklanxcjkahsdkahdwiuahdksdladjkadhaakddkjalhdklj
+                         ahdkljashdkahdjshadaljhdklsahdashdkahdahdalhkdajkndkj
+                         asldhaiyuodgwhadhaiodnbkadwkjlsandklanxcjkahsdkahdwiu
+                         ahdksdladjkadhaakddkjalhdkljahdkljashdkahdjshadaljhdk
+                         lsahdashdkahdahdalhkdajkndkjasldhaiyuodgwhadhaiodnbka
+                         dwkjlsandklanxcjkahsdkahdwiuahdksdladjkadhaakddkjalhd
+                         kljahdkljashdkahdjshadaljhdklsahdashdkahdahdalhkdajkn
+                         dkjasldhaiyuodgwhadhaiodnbkadwkjlsandklanxcjkahsdkahd
+                         wiuahdksdladjkadhaakddkjalhdkljahdkljashdkahdjshadalj
+                         hdklsahdashdkahdahdalhkdajkndkjasldhaiyuodgwhadhaiodn
+                         bkadwkjlsandklanxcjkahsdkahdwiuahdksdladjkadhaakddkja
+                         lhdkljahdkljashdkahdjshadaljhdklsahdashdkahdahdalhkda
+                         jkndkjasldhaiyuodgwhadhaiodnbkadwkjlsandklanxcjkahsdk
+                         ahdwiuahdksdladjkadhaakddkjalhdkljahdkljashdkahdjshad
+                         aljhdklsahdashdkahdahdalhkdajkndkjasldhaiyuodgwhadhai
+                         odnbkadwkjlsandklanxcjkahsdkahdwiuahdksdladjkadhaakdd
+                         kjalhdkljahdkljashdkahdjshadaljhdklsahdashdkahdahdalh
+                         kdajkndkjasldhaiyuodgwhadhaiodnbkadwkjlsandklanxcjkah
+                         sdkahdwiuahdksdladjkadhaakddkjalhdkljahdkljashdkahdjs
+                         hadaljhdklsahdashdkahdahdalhkdajkndkjasldhaiyuodgwhad
+                         haiodnbkadwkjlsandklanxcjkahsdkahdwiuahdksdladjkadhaa
+                         kddkjalhdkljahdkljashdkahdjshadaljhdklsahdashdkahdahd
+                         alhkdajkndkjasldhaiyuodgwhadhaiodnbkadwkjlsandklanxcj
+                         kahsdkahdwiuahdksdladjkadhaakddkjalhdkljahdkljashdkah
+                         djshadaljhdklsahdashdkahdahdalhkdajkndkjasldhaiyuodgw
+                         hadhaiodnbkadwkjlsandklanxcjkahsdkahdwiuahdksdladjkad
+                         haakddkjalhdkljahdkljashdkahdjshadaljhdklsahdashdkahd
+                         ahdalhkdajkndkjasldhaiyuodgwhadhaiodnbkadwkjlsandklan
+                         xcjkahsdkahdwiuahdksdladjkadhaakddkjalhdkljahdkljashd
+                         kahdjshadaljhdklsahdashdkahdahdalhkdajkndkjasldhaiyuo
+                         dgwhadhaiodnbkadwkjlsandklanxcjkahsdkahdwiuahdksdladj
+                         kadhaakd""",
+                          "2021-02-17", "iPhoneMan@phone.com") is False
+
+    clearTable()
+
+# Product description has to be longer than title
+
+
+def test_r4_4_create_product():
+    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    assert create_product(1000, "iPhone",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is True
+    assert create_product(1000, "iPhoneTwo", ".d",
+                          "2021-02-17", "iPhoneMan@phone.com") is False
+
+    clearTable()
+
+# Product price has to be in a certain range [10 - 10000]
+
+
+def test_r4_5_create_product():
+    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    assert create_product(1000, "iPhone",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is True
+    assert create_product(9, "iPhoneTwo",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is False
+    assert create_product(10001, "iPhoneThree",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is False
+
+    clearTable()
+
+# Product date has to be in a certain range (2021-01-02 - 2025-01-02)
+
+
+def test_r4_6_create_product():
+    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    assert create_product(1000, "iPhone",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is True
+    assert create_product(1000, "iPhoneTwo",
+                          "This is a very very expensive phone",
+                          "2019-02-17", "iPhoneMan@phone.com") is False
+    assert create_product(1000, "iPhoneThree",
+                          "This is a very very expensive phone",
+                          "2021-01-01", "iPhoneMan@phone.com") is False
+    assert create_product(1000, "iPhoneFour",
+                          "This is a very very expensive phone",
+                          "2026-01-01", "iPhoneMan@phone.com") is False
+    assert create_product(1000, "iPhoneFive",
+                          "This is a very very expensive phone",
+                          "2025-02-01", "iPhoneMan@phone.com") is False
+    assert create_product(1000, "iPhoneSix",
+                          "This is a very very expensive phone",
+                          "2025-01-02", "iPhoneMan@phone.com") is False
+
+    clearTable()
+# Owner email can not be empty and unique
+
+
+def test_r4_7_create_product():
+    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    assert create_product(1000, "iPhone",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "iPhoneMan@phone.com") is True
+    assert create_product(1000, "iPhoneTwo",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "") is False
+    assert create_product(1000, "iPhoneThree",
+                          "This is a very very expensive phone",
+                          "2021-02-17", "Bobby") is False
+
+    clearTable()
+
+
+def test_r5_1_update_product():
+    '''
+    Testing R5-1: One can update all attributes of the product,
+    except owner_email and last_modified_date.
+    '''
+    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    create_product(1000, "iPhone", "This is a very very expensive phone",
+                   "2021-02-17", "iPhoneMan@phone.com")
+    assert update_product(
+        1000, "iPhoneTwo",
+        "This is a very very expensive phone", "iPhone") is True
+    assert update_product(
+        1000, "iPhoneThree",
+        "This is a very very expensive phone", "gjf") is False
+
+    clearTable()
+
+
+def test_r5_2_update_product():
+    '''
+    R5-2: Price can be only increased but cannot be decreased
+    '''
+    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    create_product(1000, "iPhone", "This is a very very expensive phone",
+                   "2021-02-17", "iPhoneMan@phone.com")
+    assert update_product(
+        1100, "iPhoneTwo",
+        "This is a very very expensive phone", "iPhone") is True
+    assert update_product(
+        900, "iPhoneThree",
+        "This is a very very expensive phone", "iPhone") is False
+
+    clearTable()
+
+
+def test_r5_4_update_product():
+    '''
+    R5-4: When updating an attribute,
+    one has to make sure that it follows the same requirements as above.
+    '''
+    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    create_product(1000, "iPhone", "This is a very very expensive phone",
+                   "2021-02-17", "iPhoneMan@phone.com")
+    assert update_product(
+        1100, "iPhoneTwo",
+        "This is a very very expensive phone", "iPhone") is True
+    assert update_product(
+        1000, "iPhoneThree",
+        "This is a very very expensive phone", "gjf") is False
+    assert update_product(
+        900, "iPhoneThree",
+        "This is a very very expensive phone", "iPhoneTwo") is False
+
+
+def test_r5_3_update_product():
+    '''
+    R5-3: last_modified_date should be updated when the
+    update operation is successful.
+    '''
+    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    create_product(1000, "iPhone", "This is a very very expensive phone",
+                   "2021-02-17", "iPhoneMan@phone.com")
+    assert update_product(
+        1100, "iPhoneTwo",
+        "This is a very very expensive phone", "iPhone") is True
