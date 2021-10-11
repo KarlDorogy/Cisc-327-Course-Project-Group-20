@@ -1,6 +1,7 @@
 from operator import contains
 from os import error
 from qbay import app
+from datetime import date
 from flask_sqlalchemy import SQLAlchemy
 import re
 
@@ -74,6 +75,117 @@ class Transaction(db.Model):
 
 # create all tables
 db.create_all()
+
+def update_product(new_price, new_title, new_description, title):
+    # Checks if product exists
+    check_exist = Product.query.filter_by(title=title).all()
+    if len(check_exist) < 1:
+        return False
+    
+    # Sets the product being editted to existing_product 
+    existed_product = Product.query.filter_by(title=title).first()
+    existed_product.description = new_description
+    existed_product.title = new_title
+
+    # Checks if the new price is greater than the old price
+    if(existed_product.price > new_price):
+        return False
+    existed_product.price = new_price
+
+    # Gets the current last modified date
+    last_date = existed_product.last_modified_date
+
+    # Sets the last modified date to current date
+    today = date.today()
+    current_date = today.strftime("%d/%m/%Y")
+    existed_product.last_modified_date = current_date[7:10] + \
+        "-" + current_date[4:6] + "-" + current_date[0:3]
+
+    # Checks if last modified date is still the last date
+    if(existed_product.last_modified_date == last_date):
+        return False
+
+    return True
+
+
+def create_product(price, title, description, last_modified_date, owner_email):
+
+    # Checks if characters in the title are alphanumerical
+    for character in title:
+        if title.index(character) == 0:
+            if character == " ":
+                return False
+        if title.index(character) == len(title) - 1:
+            if character == " ":
+                return False
+        ascii_value = ord(character)
+        if ((ascii_value >= 33 and ascii_value <= 47) or
+           (ascii_value >= 58 and ascii_value <= 64) or
+           (ascii_value >= 123 and ascii_value <= 126)):
+            return False
+
+    # Checks if title is long enough
+    if len(title) > 80:
+        return False
+
+    # Checks if description is within range
+    if (len(description) < 20 or len(description) > 2000 or
+       len(description) <= len(title)):
+        return False
+
+    # Checks if price is within range
+    if price < 10 or price > 10000:
+        return False
+
+    # Checks if year is within range
+    if last_modified_date[4] != "-" or last_modified_date[7] != "-":
+        return False
+    last_modified_year = int(last_modified_date[0:4])
+    if last_modified_year < 2021 or last_modified_year > 2025:
+        return False
+    last_modified_month = int(last_modified_date[5:7])
+    if last_modified_month < 1 or last_modified_month > 12:
+        return False
+    last_modified_day = int(last_modified_date[8:10])
+    if last_modified_day < 1 or last_modified_day > 31:
+        return False
+
+    # Year range check but if year is 2021
+    if last_modified_year == 2021:
+        if last_modified_month == 1:
+            if last_modified_day < 2:
+                return False
+
+    # Year range check but if year is 2025
+    if last_modified_year == 2025:
+        if last_modified_month > 1:
+            return False
+        else:
+            if last_modified_day >= 2:
+                return False
+
+    # Check if owner email is empty
+    if owner_email is None:
+        return False
+
+    # Check if owner email already exists
+    existed_emails = User.query.filter_by(email=owner_email).all()
+    if len(existed_emails) < 1:
+        return False
+
+    # Check if product already exists
+    existed_titles = Product.query.filter_by(title=title).all()
+    if len(existed_titles) >= 1:
+        return False
+
+    # Creates the product and adds it into the database
+    new_product = Product(price=price, title=title, description=description,
+                          last_modified_date=last_modified_date,
+                          owner_email=owner_email)
+    db.session.add(new_product)
+    db.session.commit()
+
+    return True
 
 
 def register(name, email, password):
@@ -373,63 +485,4 @@ def update_user(find_email, new_name=None,
         modify_user.postal_code = new_postal_code
 
     return True
-
-def update_user(find_email, new_name=None,
-                new_shipping_address=None, new_postal_code=None):
-    '''
-    updates a existing user
-      Parameters:
-        find_email (string):    user email
-        new_name (string):    modified username
-        new_shipping_address (string): modified shipping address
-        new_postal_code (string): modified postal code
-      Returns:
-        True if updating user info succeeded otherwise False
-    '''
-
-    modify_user = User.query.filter_by(email=find_email)
-
-    # Updating Username
-    if (new_name is not None):
-        # check if username is not between 2 and 20 characters or is empty
-        if (len(new_name.strip()) < 2 or len(new_name.strip()) > 20):
-            return False
-        # check if username contains space at begining or end
-        elif (new_name[0] == ' ' or new_name[-1] == ' '):
-            return False
-        # check if username contains only alphanumeric characters
-        elif (new_name.replace(' ', '').isalnum() is False):
-            return False
-        else:
-            modify_user.update({User.username: new_name})
-
-    # Updating Shipping address
-    if (new_shipping_address is not None):
-        # check if new shipping address contains only alphanumeric characters
-        if (new_shipping_address.strip() == 0):
-            return False
-        # check if new shipping address is non-empty
-        elif (new_shipping_address.isalnum() is False):
-            return False
-        else:
-            modify_user.update({User.shipping_address: new_shipping_address})
-
-    # Updating Postal Code
-    if (new_postal_code is not None):
-        modify_user.update({User.postal_code: new_postal_code})
-
-        # Validate_postal checks a string follows the format
-        # x0x 0x0 where x is one of A,B,C,E,G,H,J,K,L,M,N,P,R,S,T,V,X,Y
-        # and 0 is any digit from 0-9
-        validate_postal = re.compile(r"[ABCEGHJKLMNPRSTVXY]\d"
-                                     r"[ABCEGHJKLMNPRSTVXY][\s]?\d"
-                                     r"[ABCEGHJKLMNPRSTVXY]\d")
-            
-        # If new_postal_code is not a perfect match against
-        # validate_postal, it is not a valid Canadian postal code
-        if re.fullmatch(validate_postal, new_postal_code) is None:
-            return False
-
-        modify_user.postal_code = new_postal_code
-
-    return True
+    
