@@ -32,21 +32,44 @@ def test_r1_3_user_register():
     '''
     The email has to follow addr-spec defined in RFC 5322
     '''
-
+    
+    # local name tests
     assert register('testEmail', 'testemail@com', '@Password') is False
     assert register('testEmail', 'te..st@mail.com', '@Password') is False
     assert register('testEmail', '.test@mail.com', '@Password') is False
     assert register('testEmail', 'test.@mail.com', '@Password') is False
     assert register('testEmail', 'test.gg@mail.com', '@Password') is True
-    assert register('u5', '''yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-    yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyys@test.com''', '@Password') is False
+    assert register('u5', long_str + '@test.com', '@Password') is False
     assert register('user', '', '@Password') is False
+    assert register('testEmail', 't!est.gg@mail.com', '@Password') is True
+    assert register('testEmail', 't*est.gg@mail.com', '@Password') is True
+    assert register('testEmail', '#est.gg@mail.com', '@Password') is True
+    assert register('testEmail', '{t_est}.gg@mail.com', '@Password') is True
+    assert register('testEmail', '"t!st.gg"@mail.com', '@Password') is True
+    assert register('testEmail', '\" \"@mail.com', '@Password') is True
+    assert register('testEmail', '"t!e"st.gg@mail.com', '@Password') is False
+    assert register('testEmail', '"t!e"st.gg@mail.com', '@Password') is False
+    assert register('testEmail', '"t!e"st" ".gg@ma.com', '@Password') is False
+    assert register('testEmail', '""@mail.com', '@Password') is False
 
+    # domain tests
     assert register('testEmail', 'test@-mail.com', '@Password') is False
     assert register('testEmail', 'test.@mail.com-', '@Password') is False
-    assert register('u5', '''test@yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
-    yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy.com''', '@Password') is False
+    assert register('u5', 'test@' + long_str + '.com', '@Password') is False
     assert register('testEmail', 'test.@ma..il.com', '@Password') is False
+    assert register('testEmail', 'WOW@[192.168.2.1]', '@Password') is True
+    assert register('testEmail', 'regexL@[192.300.2.1]', '@Password') is False
+    assert register('testEmail', '''WOW@[2001:db8:0:1234:0:567:8:1]''', 
+                    '@Password') is True
+    assert register('testEmail', 'WOW@[2001:db8::]', '@Password') is True
+    assert register('testEmail', 'WOW@[::]', '@Password') is True
+    assert register('testEmail', 'WOW@[::1234:5678]', '@Password') is True
+    assert register('testEmail', 
+                    '''WOW@[2001:0db8:0001:0000:0000:0ab9:C0A8:0102]''', 
+                    '@Password') is True
+    assert register('testEmail', '''WOW@[::1234:5678:91.123.4.56]''', 
+                    '@Password') is False
+    assert register('testEmail', 'F@[IPv6:2001:db8::1]', '@Password') is False
 
 
 def test_r1_4_user_register():
