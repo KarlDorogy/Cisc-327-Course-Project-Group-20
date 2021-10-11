@@ -1,6 +1,8 @@
 from qbay.models import (register, login, update_user,
                          create_product, update_product, db)
 
+# Global variable to test max character length of email local and domain
+# while following Flake8 style guide (lines 79 characters or less)
 long_str = 'yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyysyyyyyyyyyyyyyyyyyyyyyyyyyyyy'
 
 
@@ -31,7 +33,7 @@ def test_r1_3_user_register():
     The email has to follow addr-spec defined in RFC 5322
     '''
     
-    # local name tests
+    # Local name tests
     assert register('testEmail', 'testemail@com', '@Password') is False
     assert register('testEmail', 'te..st@mail.com', '@Password') is False
     assert register('testEmail', '.test@mail.com', '@Password') is False
@@ -50,7 +52,7 @@ def test_r1_3_user_register():
     assert register('testEmail', '"t!e"st" ".gg@ma.com', '@Password') is False
     assert register('testEmail', '""@mail.com', '@Password') is False
     
-    # domain tests
+    # Domain tests
     assert register('testEmail', 'test@-mail.com', '@Password') is False
     assert register('testEmail', 'test.@mail.com-', '@Password') is False
     assert register('u5', 'test@' + long_str + '.com', '@Password') is False
@@ -146,7 +148,7 @@ def test_r1_9_user_register():
 
 def test_r1_10_user_register():
     '''
-    Testing R1-9: Balance should be initialized as 100
+    Testing R1-10: Balance should be initialized as 100
     at the time of registration. (free $100 dollar signup bonus).
     '''
 
@@ -194,7 +196,7 @@ def test_r2_2_login():
     assert user.username == 'BalanceUser'
 
 
-def test_r3_1_update():
+def test_r3_1_update_user():
     '''
     Testing R3-1: A user is only able to update his/her user name, 
     shipping_address, and postal_code.
@@ -216,7 +218,7 @@ def test_r3_1_update():
     assert update_user('non.existant@test.com', 'alphanumeric12only') is False
 
 
-def test_r3_2_update():
+def test_r3_2_update_user():
     '''
     Testing R3-2: Shipping_address should be non-empty, alphanumeric-only, 
     and no special characters such as !
@@ -229,7 +231,7 @@ def test_r3_2_update():
                        'specialchars!@}') is False
 
 
-def test_r3_3_update():
+def test_r3_3_update_user():
     '''
     Testing R3-3: Postal code must be a valid Canadian postal code
     '''
@@ -245,7 +247,7 @@ def test_r3_3_update():
     assert update_user('update.Test@test.com', None, None, 'Z1C 8X3') is False
 
 
-def test_r3_4_update():
+def test_r3_4_update_user():
     '''
     Testing R3-4: User name has to be non-empty, alphanumeric-only, 
     and space allowed only if it is not as the prefix or suffix.
