@@ -271,7 +271,6 @@ def test_r3_4_update_user():
     assert update_user('update.Test@test.com',
                        '1') is False
 
-
 # Used to clear the db table after each test
 
 
@@ -549,4 +548,3 @@ def test_r5_3_update_product():
     assert update_product(
         1100, "iPhoneTwo",
         "This is a very very expensive phone", "iPhone") is True
-        
