@@ -197,6 +197,8 @@ def test_r3_1_update():
     assert user.shipping_address == 'ModifiedShipping'
     assert user.postal_code == 'K7L 2H9'
 
+    assert update_user('nonexsitant.user@test.com', 'ModifiedUser', 
+                       'ModifiedShipping', 'K7L 2H9') is False
 
 def test_r3_2_update():
     '''
