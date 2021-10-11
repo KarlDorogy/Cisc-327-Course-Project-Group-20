@@ -1,3 +1,5 @@
+from operator import contains
+from os import error
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
@@ -79,7 +81,7 @@ class Transaction(db.Model):
     date = db.Column(db.Date, unique=False, nullable=False)
 
 
-# create all tables
+# Create all tables
 db.create_all()
 
 def update_product(new_price, new_title, new_description, title):
@@ -188,61 +190,156 @@ def register(name, email, password):
         True if registration succeeded otherwise False
     '''
 
-    # check if the email has been used:
+    # Check if the email has been used:
     existed = User.query.filter_by(email=email).all()
     if len(existed) > 0:
         return False
     
-    # check if email or password are empty
+    # Check if email or password are empty
     if (len(email.strip()) == 0 or len(password.strip()) == 0):
         return False
     
-    # check if username is not between 2 and 20 characters or is empty 
+    # Check if username is not between 2 and 20 characters or is empty 
     if len(name.strip()) < 2 or len(name.strip()) > 20:
         return False
     
-    # check if username contains space at begining or end
+    # Check if username contains space at begining or end
     if (name[0] == ' ' or name[-1] == ' '):
         return False
     
-    # check if username contains only alphanumeric characters 
+    # Check if username contains only alphanumeric characters 
     if (name.replace(' ', '').isalnum() is False):
         return False
     
+    # Splits email address by @, left assigned to local, right assigned
+    # to domain
     if '@' not in email:
         return False
 
     email_parts = email.split('@')
     local = email_parts[0]
     domain = email_parts[1]
+
+    # Checks there are no double quotes before running dot-string validation
+    # regex
+    if local.find('\"') == -1:
+
+        # This regex checks 5 criteria: the expression is between 1-64
+        # characters, does not start or end with a dot '.', there are no
+        # consecutive dots and the name is made of alphanumeric and specific
+        # special/printable characters
+        validate_local = re.compile(
+            r"^(?=.{1,64}$)(?![.])(?!.*[.]$)(?!.*?[.]{2})"
+            r"[\w!#$%&*+-/=?^`{|}~]+$")
+        
+        # If local is not a perfect match against validate_local, it is an
+        # invalid name
+        if re.fullmatch(validate_local, local) is None:
+            return False
     
-    validate_local = re.compile(
-        r"^(?=.{1,64}$)(?![.])(?!.*?[.]{2})(?!.*[.]$)[a-zA-Z0-9_.+-]+$")
+    # Checks local name against quoted-string regex if the first and last
+    # characters are double quotes. The regex checks the quoted string is
+    # between 1-62 characters because an empty string is not valid and the
+    # first and last characters are double quotes ' " '
+    elif local.find('\"') == 0 and local.find('\"', 1) == len(local) - 1:
 
-    validate_domain = re.compile(
-        r"^(?=.{1,63}$)(?![-])(?!.*[-])[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+        # This regex checks the quoted string is made of alphanumeric
+        # characters, most printable characters and special characters.
+        # There is no limitation on repetition
+        validate_local = re.compile(r"^(?=.{1,62}$)"
+                                    r"[\w\s!#$%&*+-/=?^\"`{|}~(),:;<>@[\]]+$"
+                                    )
 
-    if re.fullmatch(validate_local, local) is None:
+        # If local is not a perfect match against validate_local, it is an
+        # invalid name
+        if re.fullmatch(validate_local, local[1:-1]) is None:
+            return False
+    
+    else:
+
+        # Informs user that local names cannot contain both quoted and
+        # unquoted text
+        print('''An email local name is either a Dot-string or a 
+        Quoted-string; it cannot be a combination.''')
         return False
 
-    if re.fullmatch(validate_domain, domain) is None:
-        return False
+    # If domain starts with '[' and ends with ']' it gets checked against
+    # IPv4 and IPv6 domain rules. Dual addresses fail check.
+    if domain.find('[') == 0 and domain.find(']', -1) == len(domain) - 1:
 
-    # check if password is at least 6 characters long
+        # Validates normal IPv4 and IPv6 addresses
+        validate_domain = re.compile("(?=.{1,39}$)(((25[0-5]|2[0-4][0-9]|[01]?"
+                                     "[0-9][0-9]?)[.]){3}(25[0-5]|2[0-4][0-9]|"
+                                     "[01]?[0-9][0-9]?))"
+
+                                     # If the string doesn't match against IPv4 
+                                     # rules, check against IPv6 rules
+                                     "|"
+
+                                     # Validates normal IPv6 addresses
+                                     "(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]"
+                                     "{1,4}|"
+                                     "([0-9a-fA-F]{1,4}:){1,7}:|"
+                                     "([0-9a-fA-F]{1,4}:){1,6}:"
+                                     "[0-9a-fA-F]{1,4}|"
+                                     "([0-9a-fA-F]{1,4}:){1,5}"
+                                     "(:[0-9a-fA-F]{1,4}){1,2}|"
+                                     "([0-9a-fA-F]{1,4}:){1,4}"
+                                     "(:[0-9a-fA-F]{1,4}){1,3}|"
+                                     "([0-9a-fA-F]{1,4}:){1,3}"
+                                     "(:[0-9a-fA-F]{1,4}){1,4}|"
+                                     "([0-9a-fA-F]{1,4}:){1,2}"
+                                     "(:[0-9a-fA-F]{1,4}){1,5}|"
+                                     "[0-9a-fA-F]{1,4}:"
+                                     "((:[0-9a-fA-F]{1,4}){1,6})|"
+                                     ":((:[0-9a-fA-F]{1,4}){1,7}|:)|"
+                                     "fe80:(:[0-9a-fA-F]{0,4}){0,4}%"
+                                     "[0-9a-zA-Z]{1,}|"
+                                     "::(ffff(:0{1,4}){0,1}:){0,1}"
+                                     "((25[0-5]|(2[0-4]|1{0,1}[0-9])"
+                                     "{0,1}[0-9])[.]{3,3}"
+                                     "(25[0-5]|(2[0-4]|1{0,1}[0-9])"
+                                     "{0,1}[0-9])|"
+                                     "([0-9a-fA-F]{1,4}:){1,4}:"
+                                     "((25[0-5]|(2[0-4]|1{0,1}[0-9])"
+                                     "{0,1}[0-9])[.]){3,3}"
+                                     "(25[0-5]|(2[0-4]|1{0,1}[0-9])"
+                                     "{0,1}[0-9])))")
+
+        # If domain is not a perfect match against validate_domain, it is an
+        # invalid address
+        if re.fullmatch(validate_domain, domain[1:-1]) is None:
+            return False
+
+    # Checks the domain against LDH domain rules
+    else:
+        validate_domain = re.compile(
+            # Checks the domain for five criteria: it is between 1 and 63
+            # characters long, it does not start or end with a hyphen '-',
+            # there is one dot '.', and every other character is
+            # a-z, A-Z, 0-9, -, or . for subdomains
+            r"^(?=.{1,63}$)(?![-])(?!.*[-])[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+
+        # If domain is not a perfect match against validate_domain, it is an
+        # invalid address
+        if re.fullmatch(validate_domain, domain) is None:
+            return False
+
+    # Check if password is at least 6 characters long
     if len(password) < 6:
         return False
 
-    # counting upercase, lowercase, and special characters in supplied password
+    # Counting upercase, lowercase, and special characters in supplied password
     uppercase_count = 0
     lowercase_count = 0
     special_count = 0
     for char in password:
         ascii_value = ord(char)
-        if (ascii_value >= 65) and (ascii_value <= 90):  # char is uppercase
+        if (ascii_value >= 65) and (ascii_value <= 90):  # Char is uppercase
             uppercase_count += 1
-        elif (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
+        elif (ascii_value >= 97) and (ascii_value <= 122):  # Char is lowercase
             lowercase_count += 1
-        # char is special character except space char
+        # Char is special character except space char
         elif ((ascii_value >= 33 and ascii_value <= 47) or 
               (ascii_value >= 58 and ascii_value <= 64) or 
               (ascii_value >= 123 and ascii_value <= 126)):
@@ -250,18 +347,18 @@ def register(name, email, password):
         else:
             continue
 
-    # check if password has at least one upercase, lowercase, and 
+    # Check if password has at least one upercase, lowercase, and 
     # special characters in supplied password 
     if (uppercase_count == 0 or lowercase_count == 0 or 
        special_count == 0):
         return False
 
-    # creates a new user
+    # Creates a new user
     user = User(username=name, email=email, password=password,
                 shipping_address=None, postal_code=None, balance=100)
-    # add it to the current database session
+    # Add it to the current database session
     db.session.add(user)
-    # actually save the user object
+    # Actually save the user object
     db.session.commit()
 
     return True
@@ -277,25 +374,25 @@ def login(email, password):
         The user object if login succeeded otherwise None
     '''
  
-    # check if email or password are empty
+    # Check if email or password are empty
     if len(email.strip()) == 0 or len(password.strip()) == 0:
         return None
     
-    # check if password is at least 6 characters long
+    # Check if password is at least 6 characters long
     if len(password) < 6:
         return None
 
-    # counting upercase, lowercase, and special characters in supplied password
+    # Counting upercase, lowercase, and special characters in supplied password
     uppercase_count = 0
     lowercase_count = 0
     special_count = 0
     for char in password:
         ascii_value = ord(char)
-        if (ascii_value >= 65) and (ascii_value <= 90):  # char is uppercase
+        if (ascii_value >= 65) and (ascii_value <= 90):  # Char is uppercase
             uppercase_count += 1
-        elif (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
+        elif (ascii_value >= 97) and (ascii_value <= 122):  # Char is lowercase
             lowercase_count += 1
-        # char is special character except space char
+        # Char is special character except space char
         elif ((ascii_value >= 33 and ascii_value <= 47) or 
               (ascii_value >= 58 and ascii_value <= 64) or 
               (ascii_value >= 123 and ascii_value <= 126)):
@@ -303,7 +400,7 @@ def login(email, password):
         else:
             continue
 
-    # check if password has at least one upercase, lowercase, and 
+    # Check if password has at least one upercase, lowercase, and 
     # special characters in supplied password    
     if (uppercase_count == 0 or lowercase_count == 0 or 
        special_count == 0):
@@ -320,7 +417,7 @@ def login(email, password):
 def update_user(find_email, new_name=None, 
                 new_shipping_address=None, new_postal_code=None):
     '''
-    updates a existing user
+    Updates a existing user
       Parameters:
         find_email (string):    user email
         new_name (string):    modified username
@@ -330,35 +427,52 @@ def update_user(find_email, new_name=None,
         True if updating user info succeeded otherwise False
     '''
 
-    modify_user = User.query.filter_by(email=find_email)
+    modify_user = User.query.filter_by(email=find_email).first()
+
+    # checks if user exists and was found
+    if modify_user is None:
+        return False
 
     # Updating Username 
     if (new_name is not None):
-        # check if username is not between 2 and 20 characters or is empty 
+        # Check if username is not between 2 and 20 characters or is empty 
         if (len(new_name.strip()) < 2 or len(new_name.strip()) > 20):
             return False
-        # check if username contains space at begining or end
+        # Check if username contains space at begining or end
         elif (new_name[0] == ' ' or new_name[-1] == ' '):
             return False
-        # check if username contains only alphanumeric characters 
+        # Check if username contains only alphanumeric characters 
         elif (new_name.replace(' ', '').isalnum() is False):
             return False
         else:
-            modify_user.update({User.username: new_name})
+            modify_user.username = new_name
 
     # Updating Shipping address 
     if (new_shipping_address is not None):
-        # check if new shipping address contains only alphanumeric characters 
+        # Check if new shipping address contains only alphanumeric characters 
         if (new_shipping_address.strip() == 0):
             return False
-        # check if new shipping address is non-empty
+        # Check if new shipping address is non-empty
         elif (new_shipping_address.isalnum() is False):
             return False
         else:
-            modify_user.update({User.shipping_address: new_shipping_address}) 
+            modify_user.shipping_address = new_shipping_address 
 
     # Updating Postal Code
     if (new_postal_code is not None):
-        modify_user.update({User.postal_code: new_postal_code})
+
+        # Validate_postal checks a string follows the format
+        # x0x 0x0 where x is one of A,B,C,E,G,H,J,K,L,M,N,P,R,S,T,V,X,Y
+        # and 0 is any digit from 0-9
+        validate_postal = re.compile(r"[ABCEGHJKLMNPRSTVXY]\d"
+                                     r"[ABCEGHJKLMNPRSTVXY][\s]?\d"
+                                     r"[ABCEGHJKLMNPRSTVXY]\d")
+            
+        # If new_postal_code is not a perfect match against
+        # validate_postal, it is not a valid Canadian postal code
+        if re.fullmatch(validate_postal, new_postal_code) is None:
+            return False
+
+        modify_user.postal_code = new_postal_code
 
     return True
