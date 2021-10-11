@@ -241,12 +241,12 @@ def register(name, email, password):
         validate_local = re.compile(
             r"^(?=.{1,64}$)(?![.])(?!.*[.]$)(?!.*?[.]{2})"
             r"[\w!#$%&*+-/=?^`{|}~]+$")
-        
+
         # If local is not a perfect match against validate_local, it is an
         # invalid name
         if re.fullmatch(validate_local, local) is None:
             return False
-    
+
     # Checks local name against quoted-string regex if the first and last
     # characters are double quotes. The regex checks the quoted string is
     # between 1-62 characters because an empty string is not valid and the
@@ -264,12 +264,12 @@ def register(name, email, password):
         # invalid name
         if re.fullmatch(validate_local, local[1:-1]) is None:
             return False
-    
+
     else:
 
         # Informs user that local names cannot contain both quoted and
         # unquoted text
-        print('''An email local name is either a Dot-string or a 
+        print('''An email local name is either a Dot-string or a
         Quoted-string; it cannot be a combination.''')
         return False
 
@@ -282,7 +282,7 @@ def register(name, email, password):
                                      "[0-9][0-9]?)[.]){3}(25[0-5]|2[0-4][0-9]|"
                                      "[01]?[0-9][0-9]?))"
 
-                                     # If the string doesn't match against IPv4 
+                                     # If the string doesn't match against IPv4
                                      # rules, check against IPv6 rules
                                      "|"
 
@@ -474,7 +474,7 @@ def update_user(find_email, new_name=None,
         validate_postal = re.compile(r"[ABCEGHJKLMNPRSTVXY]\d"
                                      r"[ABCEGHJKLMNPRSTVXY][\s]?\d"
                                      r"[ABCEGHJKLMNPRSTVXY]\d")
-            
+
         # If new_postal_code is not a perfect match against
         # validate_postal, it is not a valid Canadian postal code
         if re.fullmatch(validate_postal, new_postal_code) is None:
