@@ -32,8 +32,8 @@ def test_r1_3_user_register():
     '''
     The email has to follow addr-spec defined in RFC 5322
     '''
-    
-    # Local name tests
+
+    # local name tests
     assert register('testEmail', 'testemail@com', '@Password') is False
     assert register('testEmail', 'te..st@mail.com', '@Password') is False
     assert register('testEmail', '.test@mail.com', '@Password') is False
@@ -51,23 +51,23 @@ def test_r1_3_user_register():
     assert register('testEmail', '"t!e"st.gg@mail.com', '@Password') is False
     assert register('testEmail', '"t!e"st" ".gg@ma.com', '@Password') is False
     assert register('testEmail', '""@mail.com', '@Password') is False
-    
-    # Domain tests
+
+    # domain tests
     assert register('testEmail', 'test@-mail.com', '@Password') is False
     assert register('testEmail', 'test.@mail.com-', '@Password') is False
     assert register('u5', 'test@' + long_str + '.com', '@Password') is False
     assert register('testEmail', 'test.@ma..il.com', '@Password') is False
     assert register('testEmail', 'WOW@[192.168.2.1]', '@Password') is True
     assert register('testEmail', 'regexL@[192.300.2.1]', '@Password') is False
-    assert register('testEmail', '''WOW@[2001:db8:0:1234:0:567:8:1]''', 
+    assert register('testEmail', '''WOW@[2001:db8:0:1234:0:567:8:1]''',
                     '@Password') is True
     assert register('testEmail', 'WOW@[2001:db8::]', '@Password') is True
     assert register('testEmail', 'WOW@[::]', '@Password') is True
     assert register('testEmail', 'WOW@[::1234:5678]', '@Password') is True
-    assert register('testEmail', 
-                    '''WOW@[2001:0db8:0001:0000:0000:0ab9:C0A8:0102]''', 
+    assert register('testEmail',
+                    '''WOW@[2001:0db8:0001:0000:0000:0ab9:C0A8:0102]''',
                     '@Password') is True
-    assert register('testEmail', '''WOW@[::1234:5678:91.123.4.56]''', 
+    assert register('testEmail', '''WOW@[::1234:5678:91.123.4.56]''',
                     '@Password') is False
     assert register('testEmail', 'F@[IPv6:2001:db8::1]', '@Password') is False
 
@@ -148,7 +148,7 @@ def test_r1_9_user_register():
 
 def test_r1_10_user_register():
     '''
-    Testing R1-10: Balance should be initialized as 100
+    Testing R1-9: Balance should be initialized as 100
     at the time of registration. (free $100 dollar signup bonus).
     '''
 
@@ -178,8 +178,8 @@ def test_r2_1_login():
 
 def test_r2_2_login():
     '''
-    Testing R2-2: The login function should check if the supplied 
-    inputs meet the same email/password requirements in the register 
+    Testing R2-2: The login function should check if the supplied
+    inputs meet the same email/password requirements in the register
     function, before checking the database.
     '''
 
@@ -196,9 +196,9 @@ def test_r2_2_login():
     assert user.username == 'BalanceUser'
 
 
-def test_r3_1_update_user():
+def test_r3_1_update():
     '''
-    Testing R3-1: A user is only able to update his/her user name, 
+    Testing R3-1: A user is only able to update his/her user name,
     shipping_address, and postal_code.
     '''
 
@@ -207,51 +207,30 @@ def test_r3_1_update_user():
     assert user.username == 'RandomUser'
     assert user.shipping_address is None
     assert user.postal_code is None
-    assert update_user('update.Test@test.com', 'ModifiedUser', 
+    assert update_user('update.Test@test.com', 'ModifiedUser',
                        'ModifiedShipping', 'K7L 2H9') is True
     user2 = login('update.Test@test.com', '@Password')
     assert user2.username == 'ModifiedUser'
     assert user.shipping_address == 'ModifiedShipping'
     assert user.postal_code == 'K7L 2H9'
 
-    # checking for updating of non-existant user
-    assert update_user('non.existant@test.com', 'alphanumeric12only') is False
 
-
-def test_r3_2_update_user():
+def test_r3_2_update():
     '''
-    Testing R3-2: Shipping_address should be non-empty, alphanumeric-only, 
+    Testing R3-2: Shipping_address should be non-empty, alphanumeric-only,
     and no special characters such as !
     '''
 
-    assert update_user('update.Test@test.com', None, 
-                       'alphanumeric12only') is True
-    assert update_user('update.Test@test.com', None, '',) is False
-    assert update_user('update.Test@test.com', None, 
-                       'specialchars!@}') is False
+    assert update_user('update.Test@test.com', 'alphanumeric12only') is True
+    assert update_user('update.Test@test.com', '',) is False
+    assert update_user('update.Test@test.com', 'specialchars!@}') is False
 
 
-def test_r3_3_update_user():
+def test_r3_4_update():
     '''
-    Testing R3-3: Postal code must be a valid Canadian postal code
-    '''
-
-    assert update_user('update.Test@test.com', None, None, 'M1C 8X3') is True
-    assert update_user('update.Test@test.com', None, None, 'm1C 8X3') is False
-    assert update_user('update.Test@test.com', None, None, 'D1C 8X3') is False
-    assert update_user('update.Test@test.com', None, None, 'F1C 8X3') is False
-    assert update_user('update.Test@test.com', None, None, 'I1C 8X3') is False
-    assert update_user('update.Test@test.com', None, None, 'O1C 8X3') is False
-    assert update_user('update.Test@test.com', None, None, 'Q1C 8X3') is False
-    assert update_user('update.Test@test.com', None, None, 'U1C 8X3') is False
-    assert update_user('update.Test@test.com', None, None, 'Z1C 8X3') is False
-
-
-def test_r3_4_update_user():
-    '''
-    Testing R3-4: User name has to be non-empty, alphanumeric-only, 
+    Testing R3-4: User name has to be non-empty, alphanumeric-only,
     and space allowed only if it is not as the prefix or suffix.
-    User name also has to be longer than 2 characters and less 
+    User name also has to be longer than 2 characters and less
     than 20 characters.
     '''
 
@@ -262,7 +241,7 @@ def test_r3_4_update_user():
     assert update_user('update.Test@test.com', 'user ',) is False
     assert update_user('update.Test@test.com', 'us er',) is True
     assert update_user('update.Test@test.com', '2c') is True
-    assert update_user('update.Test@test.com', 
+    assert update_user('update.Test@test.com',
                        'exactly20characterss') is True
     assert update_user('update.Test@test.com',
                        'within2and20char') is True
@@ -284,7 +263,7 @@ def clearTable():
 
 
 def test_r4_8_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     create_product(1000, "Burrito", "This is a very very expensive Burrito",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert create_product(1000, "iPhone",
@@ -300,7 +279,7 @@ def test_r4_8_create_product():
 
 
 def test_r4_1_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -319,7 +298,7 @@ def test_r4_1_create_product():
 
 
 def test_r4_2_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -338,7 +317,7 @@ def test_r4_2_create_product():
 
 
 def test_r4_3_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -414,7 +393,7 @@ def test_r4_3_create_product():
 
 
 def test_r4_4_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -427,7 +406,7 @@ def test_r4_4_create_product():
 
 
 def test_r4_5_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -444,7 +423,7 @@ def test_r4_5_create_product():
 
 
 def test_r4_6_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -469,7 +448,7 @@ def test_r4_6_create_product():
 
 
 def test_r4_7_create_product():
-    user = register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
+    register('iPhoneMan', 'iPhoneMan@phone.com', '@Password')
     assert create_product(1000, "iPhone",
                           "This is a very very expensive phone",
                           "2021-02-17", "iPhoneMan@phone.com") is True
@@ -488,7 +467,7 @@ def test_r5_1_update_product():
     Testing R5-1: One can update all attributes of the product,
     except owner_email and last_modified_date.
     '''
-    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
     create_product(1000, "iPhone", "This is a very very expensive phone",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert update_product(
@@ -505,7 +484,7 @@ def test_r5_2_update_product():
     '''
     R5-2: Price can be only increased but cannot be decreased
     '''
-    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
     create_product(1000, "iPhone", "This is a very very expensive phone",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert update_product(
@@ -523,7 +502,7 @@ def test_r5_4_update_product():
     R5-4: When updating an attribute,
     one has to make sure that it follows the same requirements as above.
     '''
-    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
     create_product(1000, "iPhone", "This is a very very expensive phone",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert update_product(
@@ -542,7 +521,7 @@ def test_r5_3_update_product():
     R5-3: last_modified_date should be updated when the
     update operation is successful.
     '''
-    user = register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
+    register("CoolGuy", "iPhoneMan@phone.com", "@CoolPassword")
     create_product(1000, "iPhone", "This is a very very expensive phone",
                    "2021-02-17", "iPhoneMan@phone.com")
     assert update_product(

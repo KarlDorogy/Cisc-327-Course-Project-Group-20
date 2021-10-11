@@ -1,5 +1,3 @@
-from operator import contains
-from os import error
 from qbay import app
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
@@ -81,7 +79,7 @@ class Transaction(db.Model):
     date = db.Column(db.Date, unique=False, nullable=False)
 
 
-# Create all tables
+# create all tables
 db.create_all()
 
 
@@ -90,8 +88,8 @@ def update_product(new_price, new_title, new_description, title):
     check_exist = Product.query.filter_by(title=title).all()
     if len(check_exist) < 1:
         return False
-    
-    # Sets the product being editted to existing_product 
+
+    # Sets the product being editted to existing_product
     existed_product = Product.query.filter_by(title=title).first()
     existed_product.description = new_description
     existed_product.title = new_title
@@ -208,29 +206,27 @@ def register(name, email, password):
         True if registration succeeded otherwise False
     '''
 
-    # Check if the email has been used:
+    # check if the email has been used:
     existed = User.query.filter_by(email=email).all()
     if len(existed) > 0:
         return False
-    
-    # Check if email or password are empty
+
+    # check if email or password are empty
     if (len(email.strip()) == 0 or len(password.strip()) == 0):
         return False
-    
-    # Check if username is not between 2 and 20 characters or is empty 
+
+    # check if username is not between 2 and 20 characters or is empty
     if len(name.strip()) < 2 or len(name.strip()) > 20:
         return False
-    
-    # Check if username contains space at begining or end
+
+    # check if username contains space at begining or end
     if (name[0] == ' ' or name[-1] == ' '):
         return False
-    
-    # Check if username contains only alphanumeric characters 
+
+    # check if username contains only alphanumeric characters
     if (name.replace(' ', '').isalnum() is False):
         return False
-    
-    # Splits email address by @, left assigned to local, right assigned
-    # to domain
+
     if '@' not in email:
         return False
 
@@ -249,12 +245,12 @@ def register(name, email, password):
         validate_local = re.compile(
             r"^(?=.{1,64}$)(?![.])(?!.*[.]$)(?!.*?[.]{2})"
             r"[\w!#$%&*+-/=?^`{|}~]+$")
-        
+
         # If local is not a perfect match against validate_local, it is an
         # invalid name
         if re.fullmatch(validate_local, local) is None:
             return False
-    
+
     # Checks local name against quoted-string regex if the first and last
     # characters are double quotes. The regex checks the quoted string is
     # between 1-62 characters because an empty string is not valid and the
@@ -272,12 +268,12 @@ def register(name, email, password):
         # invalid name
         if re.fullmatch(validate_local, local[1:-1]) is None:
             return False
-    
+
     else:
 
         # Informs user that local names cannot contain both quoted and
         # unquoted text
-        print('''An email local name is either a Dot-string or a 
+        print('''An email local name is either a Dot-string or a
         Quoted-string; it cannot be a combination.''')
         return False
 
@@ -290,7 +286,7 @@ def register(name, email, password):
                                      "[0-9][0-9]?)[.]){3}(25[0-5]|2[0-4][0-9]|"
                                      "[01]?[0-9][0-9]?))"
 
-                                     # If the string doesn't match against IPv4 
+                                     # If the string doesn't match against IPv4
                                      # rules, check against IPv6 rules
                                      "|"
 
@@ -343,40 +339,40 @@ def register(name, email, password):
         if re.fullmatch(validate_domain, domain) is None:
             return False
 
-    # Check if password is at least 6 characters long
+    # check if password is at least 6 characters long
     if len(password) < 6:
         return False
 
-    # Counting upercase, lowercase, and special characters in supplied password
+    # counting upercase, lowercase, and special characters in supplied password
     uppercase_count = 0
     lowercase_count = 0
     special_count = 0
     for char in password:
         ascii_value = ord(char)
-        if (ascii_value >= 65) and (ascii_value <= 90):  # Char is uppercase
+        if (ascii_value >= 65) and (ascii_value <= 90):  # char is uppercase
             uppercase_count += 1
-        elif (ascii_value >= 97) and (ascii_value <= 122):  # Char is lowercase
+        elif (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
             lowercase_count += 1
-        # Char is special character except space char
-        elif ((ascii_value >= 33 and ascii_value <= 47) or 
-              (ascii_value >= 58 and ascii_value <= 64) or 
+        # char is special character except space char
+        elif ((ascii_value >= 33 and ascii_value <= 47) or
+              (ascii_value >= 58 and ascii_value <= 64) or
               (ascii_value >= 123 and ascii_value <= 126)):
             special_count += 1
         else:
             continue
 
-    # Check if password has at least one upercase, lowercase, and 
-    # special characters in supplied password 
-    if (uppercase_count == 0 or lowercase_count == 0 or 
+    # check if password has at least one upercase, lowercase, and
+    # special characters in supplied password
+    if (uppercase_count == 0 or lowercase_count == 0 or
        special_count == 0):
         return False
 
-    # Creates a new user
+    # creates a new user
     user = User(username=name, email=email, password=password,
                 shipping_address=None, postal_code=None, balance=100)
-    # Add it to the current database session
+    # add it to the current database session
     db.session.add(user)
-    # Actually save the user object
+    # actually save the user object
     db.session.commit()
 
     return True
@@ -391,36 +387,36 @@ def login(email, password):
       Returns:
         The user object if login succeeded otherwise None
     '''
- 
-    # Check if email or password are empty
+
+    # check if email or password are empty
     if len(email.strip()) == 0 or len(password.strip()) == 0:
         return None
-    
-    # Check if password is at least 6 characters long
+
+    # check if password is at least 6 characters long
     if len(password) < 6:
         return None
 
-    # Counting upercase, lowercase, and special characters in supplied password
+    # counting upercase, lowercase, and special characters in supplied password
     uppercase_count = 0
     lowercase_count = 0
     special_count = 0
     for char in password:
         ascii_value = ord(char)
-        if (ascii_value >= 65) and (ascii_value <= 90):  # Char is uppercase
+        if (ascii_value >= 65) and (ascii_value <= 90):  # char is uppercase
             uppercase_count += 1
-        elif (ascii_value >= 97) and (ascii_value <= 122):  # Char is lowercase
+        elif (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
             lowercase_count += 1
-        # Char is special character except space char
-        elif ((ascii_value >= 33 and ascii_value <= 47) or 
-              (ascii_value >= 58 and ascii_value <= 64) or 
+        # char is special character except space char
+        elif ((ascii_value >= 33 and ascii_value <= 47) or
+              (ascii_value >= 58 and ascii_value <= 64) or
               (ascii_value >= 123 and ascii_value <= 126)):
             special_count += 1
         else:
             continue
 
-    # Check if password has at least one upercase, lowercase, and 
-    # special characters in supplied password    
-    if (uppercase_count == 0 or lowercase_count == 0 or 
+    # check if password has at least one upercase, lowercase, and
+    # special characters in supplied password
+    if (uppercase_count == 0 or lowercase_count == 0 or
        special_count == 0):
         return None
 
@@ -432,10 +428,10 @@ def login(email, password):
     return valids[0]
 
 
-def update_user(find_email, new_name=None, 
+def update_user(find_email, new_name=None,
                 new_shipping_address=None, new_postal_code=None):
     '''
-    Updates a existing user
+    updates a existing user
       Parameters:
         find_email (string):    user email
         new_name (string):    modified username
@@ -445,39 +441,36 @@ def update_user(find_email, new_name=None,
         True if updating user info succeeded otherwise False
     '''
 
-    modify_user = User.query.filter_by(email=find_email).first()
+    modify_user = User.query.filter_by(email=find_email)
 
-    # checks if user exists and was found
-    if modify_user is None:
-        return False
-
-    # Updating Username 
+    # Updating Username
     if (new_name is not None):
-        # Check if username is not between 2 and 20 characters or is empty 
+        # check if username is not between 2 and 20 characters or is empty
         if (len(new_name.strip()) < 2 or len(new_name.strip()) > 20):
             return False
-        # Check if username contains space at begining or end
+        # check if username contains space at begining or end
         elif (new_name[0] == ' ' or new_name[-1] == ' '):
             return False
-        # Check if username contains only alphanumeric characters 
+        # check if username contains only alphanumeric characters
         elif (new_name.replace(' ', '').isalnum() is False):
             return False
         else:
-            modify_user.username = new_name
+            modify_user.update({User.username: new_name})
 
-    # Updating Shipping address 
+    # Updating Shipping address
     if (new_shipping_address is not None):
-        # Check if new shipping address contains only alphanumeric characters 
+        # check if new shipping address contains only alphanumeric characters
         if (new_shipping_address.strip() == 0):
             return False
-        # Check if new shipping address is non-empty
+        # check if new shipping address is non-empty
         elif (new_shipping_address.isalnum() is False):
             return False
         else:
-            modify_user.shipping_address = new_shipping_address 
+            modify_user.update({User.shipping_address: new_shipping_address})
 
     # Updating Postal Code
     if (new_postal_code is not None):
+        modify_user.update({User.postal_code: new_postal_code})
 
         # Validate_postal checks a string follows the format
         # x0x 0x0 where x is one of A,B,C,E,G,H,J,K,L,M,N,P,R,S,T,V,X,Y
@@ -485,7 +478,7 @@ def update_user(find_email, new_name=None,
         validate_postal = re.compile(r"[ABCEGHJKLMNPRSTVXY]\d"
                                      r"[ABCEGHJKLMNPRSTVXY][\s]?\d"
                                      r"[ABCEGHJKLMNPRSTVXY]\d")
-            
+
         # If new_postal_code is not a perfect match against
         # validate_postal, it is not a valid Canadian postal code
         if re.fullmatch(validate_postal, new_postal_code) is None:
@@ -494,4 +487,3 @@ def update_user(find_email, new_name=None,
         modify_user.postal_code = new_postal_code
 
     return True
-    
