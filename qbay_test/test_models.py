@@ -211,6 +211,9 @@ def test_r3_1_update():
     assert user.shipping_address == 'ModifiedShipping'
     assert user.postal_code == 'K7L 2H9'
 
+    # checking for updating of non-existant user
+    assert update_user('non.existant@test.com', 'alphanumeric12only') is False
+
 
 def test_r3_2_update():
     '''
@@ -218,9 +221,11 @@ def test_r3_2_update():
     and no special characters such as !
     '''
 
-    assert update_user('update.Test@test.com', 'alphanumeric12only') is True
-    assert update_user('update.Test@test.com', '',) is False
-    assert update_user('update.Test@test.com', 'specialchars!@}') is False
+    assert update_user('update.Test@test.com', None, 
+                       'alphanumeric12only') is True
+    assert update_user('update.Test@test.com', None, '',) is False
+    assert update_user('update.Test@test.com', None, 
+                       'specialchars!@}') is False
 
 
 def test_r3_3_update():
