@@ -43,7 +43,7 @@ class Product(db.Model):
     last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
     owner_email = db.Column(db.String(1000), unique=False, nullable=False)
-   
+
 
 """
 Lays out the attributes for reviews that verified users can place on products
@@ -82,6 +82,7 @@ class Transaction(db.Model):
 # create all tables
 db.create_all()
 
+
 def update_product(new_price, new_title, new_description, title):
     check_exist = Product.query.filter_by(title=title).all()
     if len(check_exist) < 1:
@@ -101,39 +102,44 @@ def update_product(new_price, new_title, new_description, title):
 
     today = date.today()
     current_date = today.strftime("%d/%m/%Y")
-    existed_product.last_modified_date = current_date[7:10] + "-" + current_date[4:6] + "-" + current_date[0:3]
+    existed_product.last_modified_date = current_date[7:10] + \
+        "-" + current_date[4:6] + "-" + current_date[0:3]
 
     if(existed_product.last_modified_date == last_date):
         return False
 
     return True
 
+
 def create_product(price, title, description, last_modified_date, owner_email):
-    
+
     # Checks if characters in the title are alphanumerical
     for character in title:
         if title.index(character) == 0:
             if character == " ":
                 return False
-        if title.index(character) == len(title)-1:
+        if title.index(character) == len(title) - 1:
             if character == " ":
                 return False
         ascii_value = ord(character)
-        if ((ascii_value >= 33 and ascii_value <= 47) or (ascii_value >= 58 and ascii_value <= 64) or (ascii_value >= 123 and ascii_value <= 126)):
+        if ((ascii_value >= 33 and ascii_value <= 47) or
+           (ascii_value >= 58 and ascii_value <= 64) or
+           (ascii_value >= 123 and ascii_value <= 126)):
             return False
-    
+
     # Checks if title is long enough
     if len(title) > 80:
         return False
-    
+
     # Checks if description is within range
-    if len(description) < 20 or len(description) > 2000 or len(description) <= len(title):
+    if (len(description) < 20 or len(description) > 2000 or
+       len(description) <= len(title)):
         return False
 
     # Checks if price is within range
     if price < 10 or price > 10000:
         return False
-    
+
     # Checks if year is within range
     if last_modified_date[4] != "-" or last_modified_date[7] != "-":
         return False
@@ -160,27 +166,30 @@ def create_product(price, title, description, last_modified_date, owner_email):
         else:
             if last_modified_day >= 2:
                 return False
-    
+
     # Check if owner email is empty
     if owner_email is None:
         return False
-    
+
     # Check if owner email already exists
     existed_emails = User.query.filter_by(email=owner_email).all()
     if len(existed_emails) < 1:
         return False
-    
+
     # Check if product already exists
     existed_titles = Product.query.filter_by(title=title).all()
     if len(existed_titles) >= 1:
         return False
-    
+
     # Creates the product and adds it into the database
-    new_product = Product(price=price, title=title, description=description, last_modified_date=last_modified_date, owner_email=owner_email)
+    new_product = Product(price=price, title=title, description=description,
+                          last_modified_date=last_modified_date,
+                          owner_email=owner_email)
     db.session.add(new_product)
     db.session.commit()
 
-    return True 
+    return True
+
 
 def register(name, email, password):
     '''
@@ -197,30 +206,30 @@ def register(name, email, password):
     existed = User.query.filter_by(email=email).all()
     if len(existed) > 0:
         return False
-    
+
     # check if email or password are empty
     if (len(email.strip()) == 0 or len(password.strip()) == 0):
         return False
-    
-    # check if username is not between 2 and 20 characters or is empty 
+
+    # check if username is not between 2 and 20 characters or is empty
     if len(name.strip()) < 2 or len(name.strip()) > 20:
         return False
-    
+
     # check if username contains space at begining or end
     if (name[0] == ' ' or name[-1] == ' '):
         return False
-    
-    # check if username contains only alphanumeric characters 
+
+    # check if username contains only alphanumeric characters
     if (name.replace(' ', '').isalnum() is False):
         return False
-    
+
     if '@' not in email:
         return False
 
     email_parts = email.split('@')
     local = email_parts[0]
     domain = email_parts[1]
-    
+
     validate_local = re.compile(
         r"^(?=.{1,64}$)(?![.])(?!.*?[.]{2})(?!.*[.]$)[a-zA-Z0-9_.+-]+$")
 
@@ -248,16 +257,16 @@ def register(name, email, password):
         elif (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
             lowercase_count += 1
         # char is special character except space char
-        elif ((ascii_value >= 33 and ascii_value <= 47) or 
-              (ascii_value >= 58 and ascii_value <= 64) or 
+        elif ((ascii_value >= 33 and ascii_value <= 47) or
+              (ascii_value >= 58 and ascii_value <= 64) or
               (ascii_value >= 123 and ascii_value <= 126)):
             special_count += 1
         else:
             continue
 
-    # check if password has at least one upercase, lowercase, and 
-    # special characters in supplied password 
-    if (uppercase_count == 0 or lowercase_count == 0 or 
+    # check if password has at least one upercase, lowercase, and
+    # special characters in supplied password
+    if (uppercase_count == 0 or lowercase_count == 0 or
        special_count == 0):
         return False
 
@@ -281,11 +290,11 @@ def login(email, password):
       Returns:
         The user object if login succeeded otherwise None
     '''
- 
+
     # check if email or password are empty
     if len(email.strip()) == 0 or len(password.strip()) == 0:
         return None
-    
+
     # check if password is at least 6 characters long
     if len(password) < 6:
         return None
@@ -301,16 +310,16 @@ def login(email, password):
         elif (ascii_value >= 97) and (ascii_value <= 122):  # char is lowercase
             lowercase_count += 1
         # char is special character except space char
-        elif ((ascii_value >= 33 and ascii_value <= 47) or 
-              (ascii_value >= 58 and ascii_value <= 64) or 
+        elif ((ascii_value >= 33 and ascii_value <= 47) or
+              (ascii_value >= 58 and ascii_value <= 64) or
               (ascii_value >= 123 and ascii_value <= 126)):
             special_count += 1
         else:
             continue
 
-    # check if password has at least one upercase, lowercase, and 
-    # special characters in supplied password    
-    if (uppercase_count == 0 or lowercase_count == 0 or 
+    # check if password has at least one upercase, lowercase, and
+    # special characters in supplied password
+    if (uppercase_count == 0 or lowercase_count == 0 or
        special_count == 0):
         return None
 
@@ -322,7 +331,7 @@ def login(email, password):
     return valids[0]
 
 
-def update_user(find_email, new_name=None, 
+def update_user(find_email, new_name=None,
                 new_shipping_address=None, new_postal_code=None):
     '''
     updates a existing user
@@ -337,30 +346,30 @@ def update_user(find_email, new_name=None,
 
     modify_user = User.query.filter_by(email=find_email)
 
-    # Updating Username 
+    # Updating Username
     if (new_name is not None):
-        # check if username is not between 2 and 20 characters or is empty 
+        # check if username is not between 2 and 20 characters or is empty
         if (len(new_name.strip()) < 2 or len(new_name.strip()) > 20):
             return False
         # check if username contains space at begining or end
         elif (new_name[0] == ' ' or new_name[-1] == ' '):
             return False
-        # check if username contains only alphanumeric characters 
+        # check if username contains only alphanumeric characters
         elif (new_name.replace(' ', '').isalnum() is False):
             return False
         else:
             modify_user.update({User.username: new_name})
 
-    # Updating Shipping address 
+    # Updating Shipping address
     if (new_shipping_address is not None):
-        # check if new shipping address contains only alphanumeric characters 
+        # check if new shipping address contains only alphanumeric characters
         if (new_shipping_address.strip() == 0):
             return False
         # check if new shipping address is non-empty
         elif (new_shipping_address.isalnum() is False):
             return False
         else:
-            modify_user.update({User.shipping_address: new_shipping_address}) 
+            modify_user.update({User.shipping_address: new_shipping_address})
 
     # Updating Postal Code
     if (new_postal_code is not None):
