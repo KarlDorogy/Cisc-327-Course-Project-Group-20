@@ -84,13 +84,18 @@ db.create_all()
 
 def update_product(new_price, new_title, new_description, title):
 
+    # Checks if product exists
+    if len(Product.query.filter_by(title=title).all()) < 1:
+       return False
+
     existed_product = Product.query.filter_by(title=title)
-    existed_product.price = new_price
     existed_product.description = new_description
     existed_product.title = new_title
 
     if(existed_product.price > new_price):
         return False
+
+    existed_product.price = new_price
 
     today = date.today()
     current_date = today.strftime("%d/%m/%Y")
@@ -100,9 +105,8 @@ def update_product(new_price, new_title, new_description, title):
 
 def create_product(price, title, description, last_modified_date, owner_email):
     
+    # Checks if characters in the title are alphanumerical
     for character in title:
-        if character.isdigit():
-            return False
         if title.index(character) == 0:
             if character == " ":
                 return False
@@ -113,15 +117,19 @@ def create_product(price, title, description, last_modified_date, owner_email):
         if ((ascii_value >= 33 and ascii_value <= 47) or (ascii_value >= 58 and ascii_value <= 64) or (ascii_value >= 123 and ascii_value <= 126)):
             return False
     
+    # Checks if title is long enough
     if len(title) > 80:
         return False
     
+    # Checks if description is within range
     if len(description) < 20 or len(description) > 2000 or len(description) <= len(title):
         return False
 
+    # Checks if price is within range
     if price < 10 or price > 10000:
         return False
     
+    # Checks if year is within range
     if last_modified_date[4] != "-" or last_modified_date[7] != "-":
         return False
     last_modified_year = int(last_modified_date[0:4])
@@ -134,11 +142,13 @@ def create_product(price, title, description, last_modified_date, owner_email):
     if last_modified_day < 1 or last_modified_day > 31:
         return False
 
+    # Year range check but if year is 2021
     if last_modified_year == 2021:
         if last_modified_month == 1:
             if last_modified_day < 2:
                 return False
 
+    # Year range check but if year is 2025
     if last_modified_year == 2025:
         if last_modified_month > 1:
             return False
@@ -146,18 +156,21 @@ def create_product(price, title, description, last_modified_date, owner_email):
             if last_modified_day >= 2:
                 return False
     
+    # Check if owner email is empty
     if owner_email is None:
         return False
     
+    # Check if owner email already exists
     existed_emails = User.query.filter_by(email=owner_email).all()
     if len(existed_emails) < 1:
         return False
     
+    # Check if product already exists
     existed_titles = Product.query.filter_by(title=title).all()
     if len(existed_titles) >= 1:
         return False
-    print(existed_titles)
     
+    # Creates the product and adds it into the database
     new_product = Product(price=price, title=title, description=description, last_modified_date=last_modified_date, owner_email=owner_email)
     db.session.add(new_product)
     db.session.commit()
