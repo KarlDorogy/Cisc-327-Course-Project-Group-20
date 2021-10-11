@@ -232,8 +232,13 @@ def login(email, password):
 def update_user(find_email, new_name=None, 
                 new_shipping_address=None, new_postal_code=None):
 
-    modify_user = User.query.filter_by(email=find_email)
+    modify_user = User.query.filter_by(email=find_email).first()
 
+    # checks if user exists and was found
+    if modify_user is None:
+        return False
+
+    # Updating Username 
     if (new_name is not None):
         # check if username is not between 2 and 20 characters or is empty 
         if (len(new_name.strip()) < 2 or len(new_name.strip()) > 20):
@@ -245,8 +250,9 @@ def update_user(find_email, new_name=None,
         elif (new_name.replace(' ', '').isalnum() is False):
             return False
         else:
-            modify_user.update({User.username: new_name})
+            modify_user.username = new_name
 
+    # Updating Shipping address 
     if (new_shipping_address is not None):
         # check if new shipping address contains only alphanumeric characters 
         if (new_shipping_address.strip() == 0):
@@ -255,8 +261,9 @@ def update_user(find_email, new_name=None,
         elif (new_shipping_address.isalnum() is False):
             return False
         else:
-            modify_user.update({User.shipping_address: new_shipping_address}) 
+            modify_user.shipping_address = new_shipping_address
 
+    # Updating Postal Code
     if (new_postal_code is not None):
 
         validate_postal = re.compile(r"[ABCEGHJKLMNPRSTVXY]\d"
@@ -266,6 +273,6 @@ def update_user(find_email, new_name=None,
         if re.fullmatch(validate_postal, new_postal_code) is None:
             return False
 
-        modify_user.update({User.postal_code: new_postal_code})
+        modify_user.postal_code = new_postal_code
 
     return True
