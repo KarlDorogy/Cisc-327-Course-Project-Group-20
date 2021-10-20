@@ -470,7 +470,6 @@ def update_user(find_email, new_name=None,
 
     # Updating Postal Code
     if (new_postal_code is not None):
-        modify_user.update({User.postal_code: new_postal_code})
 
         # Validate_postal checks a string follows the format
         # x0x 0x0 where x is one of A,B,C,E,G,H,J,K,L,M,N,P,R,S,T,V,X,Y
@@ -484,6 +483,6 @@ def update_user(find_email, new_name=None,
         if re.fullmatch(validate_postal, new_postal_code) is None:
             return False
 
-        modify_user.postal_code = new_postal_code
+        modify_user.update({User.postal_code: new_postal_code})
 
     return True
