@@ -196,7 +196,7 @@ def test_r2_2_login():
     assert user.username == 'BalanceUser'
 
 
-def test_r3_1_update():
+def test_r3_1_update_user():
     '''
     Testing R3-1: A user is only able to update his/her user name,
     shipping_address, and postal_code.
@@ -209,24 +209,41 @@ def test_r3_1_update():
     assert user.postal_code is None
     assert update_user('update.Test@test.com', 'ModifiedUser',
                        'ModifiedShipping', 'K7L 2H9') is True
-    user2 = login('update.Test@test.com', '@Password')
-    assert user2.username == 'ModifiedUser'
+    assert user.username == 'ModifiedUser'
     assert user.shipping_address == 'ModifiedShipping'
     assert user.postal_code == 'K7L 2H9'
 
 
-def test_r3_2_update():
+def test_r3_2_update_user():
     '''
     Testing R3-2: Shipping_address should be non-empty, alphanumeric-only,
     and no special characters such as !
     '''
 
-    assert update_user('update.Test@test.com', 'alphanumeric12only') is True
-    assert update_user('update.Test@test.com', '',) is False
-    assert update_user('update.Test@test.com', 'specialchars!@}') is False
+    assert update_user('update.Test@test.com', None, 
+                       'alphanumeric12only') is True
+    assert update_user('update.Test@test.com', None, '',) is False
+    assert update_user('update.Test@test.com', None, 
+                       'specialchars!@}') is False
 
 
-def test_r3_4_update():
+def test_r3_3_update_user():
+    '''
+    Testing R3-3: Postal code must be a valid Canadian postal code
+    '''
+
+    assert update_user('update.Test@test.com', None, None, 'M1C 8X3') is True
+    assert update_user('update.Test@test.com', None, None, 'm1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'D1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'F1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'I1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'O1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'Q1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'U1C 8X3') is False
+    assert update_user('update.Test@test.com', None, None, 'Z1C 8X3') is False
+
+
+def test_r3_4_update_user():
     '''
     Testing R3-4: User name has to be non-empty, alphanumeric-only,
     and space allowed only if it is not as the prefix or suffix.

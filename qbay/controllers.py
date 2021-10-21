@@ -1,5 +1,5 @@
 from flask import render_template, request, session, redirect
-from qbay.models import login, User, register
+from qbay.models import *
 
 
 from qbay import app
@@ -70,18 +70,10 @@ def login_post():
 @app.route('/')
 @authenticate
 def home(user):
-    # authentication is done in the wrapper function
-    # see above.
-    # by using @authenticate, we don't need to re-write
-    # the login checking code all the time for other
-    # front-end portals
 
-    # some fake product data
-    products = [
-        {'name': 'prodcut 1', 'price': 10},
-        {'name': 'prodcut 2', 'price': 20}
-    ]
-    return render_template('index.html', user=user, products=products)
+    # gets a list of products that the logged in user owns
+    user_products = get_products(user.email)
+    return render_template('index.html', user=user, products=user_products)
 
 
 @app.route('/register', methods=['GET'])
@@ -104,13 +96,42 @@ def register_post():
         # use backend api to register the user
         success = register(name, email, password)
         if not success:
-            error_message = "Registration failed."
+            error_message = "Registration Failed."
     # if there is any error messages when registering new user
     # at the backend, go back to the register page.
     if error_message:
         return render_template('register.html', message=error_message)
     else:
         return redirect('/login')
+
+
+@app.route('/updateuser', methods=['Get'])
+def update_user_get():
+    return render_template('updateuser.html', 
+                           message='Please enter new info below:')
+
+
+@app.route('/updateuser', methods=['POST'])
+def update_user_post():
+
+    # retrieves current logged in user's email
+    user_email = session['logged_in']
+
+    name = request.form.get('name')
+    shipping_address = request.form.get('shippingaddress')
+    postal_code = request.form.get('postalcode')
+    error_message = None
+
+    # use backend api to update the user attributes
+    success = update_user(user_email, name, shipping_address, postal_code)
+    if not success:
+        error_message = "Updating of User Profile Failed."
+    # if there is any error messages when updateing user profile
+    # at the backend, go back to the update page.
+    if error_message:
+        return render_template('updateuser.html', message=error_message)
+    else:
+        return redirect('/', code=303)
 
 
 @app.route('/logout')
