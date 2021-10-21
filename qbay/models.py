@@ -463,7 +463,6 @@ def update_user(find_email, new_name=None,
         elif (new_name.replace(' ', '').isalnum() is False):
             return False
         else:
-            print("new name is ", new_name)
             modify_user.username = new_name
 
     # Updating Shipping address
