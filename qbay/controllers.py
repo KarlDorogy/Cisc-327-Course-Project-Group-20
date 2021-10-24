@@ -134,6 +134,36 @@ def update_user_post():
         return redirect('/', code=303)
 
 
+@app.route('/createproduct', methods=['Get'])
+def create_product_get():
+    return render_template('createproduct.html', 
+                           message='Please enter product info below:')
+
+
+@app.route('/createproduct', methods=['POST'])
+def create_product_get():
+
+    # retrieves current logged in user's email
+    owner_email = session['logged_in']
+    # last_modified_date = Tom knows the code that needs to be added here
+    price = request.form.get('price')
+    title = request.form.get('title')
+    description = request.form.get('description')
+    error_message = None
+
+    # use backend api to update the user attributes
+    success = create_product(price, title, description, 
+                             last_modified_date, owner_email)
+    if not success:
+        error_message = "Updating of User Profile Failed."
+    # if there is any error messages when updateing user profile
+    # at the backend, go back to the update page.
+    if error_message:
+        return render_template('updateuser.html', message=error_message)
+    else:
+        return redirect('/', code=303)
+
+
 @app.route('/logout')
 def logout():
     if 'logged_in' in session:
