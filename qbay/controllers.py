@@ -155,11 +155,11 @@ def create_product_get():
     success = create_product(price, title, description, 
                              last_modified_date, owner_email)
     if not success:
-        error_message = "Updating of User Profile Failed."
-    # if there is any error messages when updateing user profile
-    # at the backend, go back to the update page.
+        error_message = "Product Creation Failed."
+    # if there is any error messages when creating a product
+    # at the backend, go back to the create product page.
     if error_message:
-        return render_template('updateuser.html', message=error_message)
+        return render_template('createproduct.html', message=error_message)
     else:
         return redirect('/', code=303)
 
