@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Create Product{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<h4 id='message'>{{message}}</h4>
+<form method="post">
+  <div class="form-group">
+    <label for="price">Price</label>
+    <input class="form-control" name="price" id="price" required>
+    <label for="title">Title</label>
+    <input class="form-control" name="title" id="title" required>
+    <label for="description">Description</label>
+    <input class="form-control" name="description" id="description" required>
+    <input class="btn btn-primary" type="submit" value="Create">
+  <a href='/' class="btn btn-primary" id="btn-submit" >Cancel</a>
+  </div>
+</form>
+{% endblock %}

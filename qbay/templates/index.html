@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Profile{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<h2 id="welcome-header">Welcome {{ user.username }}!
+<a href='/updateuser' class="btn btn-primary" id="btn-submit" >Update Profile </a>    
+</h2>
+<div>
+    <h5>Current Shipping Adress: {{ user.shipping_address }}
+    <br>Current Postal Code: {{ user.postal_code }}
+    </h5>
+</div>
+
+<h3>Here are all available products:
+<a href='/createproduct' class="btn btn-primary" id="btn-submit" >Create Product </a>
+</h3>
+<div id="products">
+    {% for product in products %}
+    <div>
+        <h5>name: {{ product.name }} price: {{ product.price }} <a href=''>update</a></h5>
+    </div>
+    {% endfor %}
+</div>
+<a href='/logout' class="btn btn-primary" id="btn-submit" >Logout</a>
+{% endblock %}

@@ -1,6 +1,6 @@
 from qbay import app
-from flask_sqlalchemy import SQLAlchemy
 from datetime import date
+from flask_sqlalchemy import SQLAlchemy
 import re
 
 
@@ -83,32 +83,43 @@ class Transaction(db.Model):
 db.create_all()
 
 
-def update_product(new_price, new_title, new_description, title):
-    check_exist = Product.query.filter_by(title=title).all()
-    if len(check_exist) < 1:
+def update_product(new_price, new_title, 
+                   new_description, title):
+    # Checks if product exists and creates a list of exisitng products
+    product_list = Product.query.filter_by(title=title).all()
+    if len(product_list) < 1:
         return False
 
-    existed_product = Product.query.filter_by(title=title).first()
-    existed_product.description = new_description
-    existed_product.title = new_title
+    # Updates every existing product object to new inputed values 
+    for existed_product in product_list:
 
-    if(existed_product.price > new_price):
-        return False
-    existed_product.price = new_price
+        existed_product.description = new_description
+        existed_product.title = new_title
+        # Checks if the new price is greater than the old price
+        if(existed_product.price > new_price):
+            return False
+        existed_product.price = new_price
+        
+        # Gets the current last modified date
+        last_date = existed_product.last_modified_date
 
-    last_date = existed_product.last_modified_date
+        # Sets the last modified date to current date
+        today = date.today()
+        current_date = today.strftime("%d/%m/%Y")
+        existed_product.last_modified_date = current_date[7:10] + \
+            "-" + current_date[4:6] + "-" + current_date[0:3]
 
-    existed_product.price = new_price
-
-    today = date.today()
-    current_date = today.strftime("%d/%m/%Y")
-    existed_product.last_modified_date = current_date[7:10] + \
-        "-" + current_date[4:6] + "-" + current_date[0:3]
-
-    if(existed_product.last_modified_date == last_date):
-        return False
-
+        # Checks if last modified date is still the last date
+        if(existed_product.last_modified_date == last_date):
+            return False
+        db.session.add(existed_product)
+        db.session.commit()
     return True
+
+
+def get_products(email):
+    product_list = Product.query.filter_by(owner_email=email).all()
+    return product_list
 
 
 def create_product(price, title, description, last_modified_date, owner_email):
@@ -437,7 +448,8 @@ def update_user(find_email, new_name=None,
         True if updating user info succeeded otherwise False
     '''
 
-    modify_user = User.query.filter_by(email=find_email)
+    modify_user_list = User.query.filter_by(email=find_email).all()
+    modify_user = modify_user_list[0]
 
     # Updating Username
     if (new_name is not None):
@@ -451,7 +463,7 @@ def update_user(find_email, new_name=None,
         elif (new_name.replace(' ', '').isalnum() is False):
             return False
         else:
-            modify_user.update({User.username: new_name})
+            modify_user.username = new_name
 
     # Updating Shipping address
     if (new_shipping_address is not None):
@@ -462,11 +474,10 @@ def update_user(find_email, new_name=None,
         elif (new_shipping_address.isalnum() is False):
             return False
         else:
-            modify_user.update({User.shipping_address: new_shipping_address})
+            modify_user.shipping_address = new_shipping_address
 
     # Updating Postal Code
     if (new_postal_code is not None):
-        modify_user.update({User.postal_code: new_postal_code})
 
         # Validate_postal checks a string follows the format
         # x0x 0x0 where x is one of A,B,C,E,G,H,J,K,L,M,N,P,R,S,T,V,X,Y
@@ -482,4 +493,6 @@ def update_user(find_email, new_name=None,
 
         modify_user.postal_code = new_postal_code
 
+    db.session.add(modify_user)
+    db.session.commit()
     return True
