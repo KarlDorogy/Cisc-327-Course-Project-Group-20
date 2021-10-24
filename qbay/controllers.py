@@ -1,6 +1,6 @@
 from flask import render_template, request, session, redirect
 from qbay.models import *
-
+from datetime import date
 
 from qbay import app
 
@@ -134,23 +134,45 @@ def update_user_post():
         return redirect('/', code=303)
 
 
+@app.route('/updateproduct', methods=['Get'])
+def update_product_get():
+    return render_template('updateproduct.html', message="Please enter new product info below:", pName=request.args.get('pName'))
+
+@app.route('/updateproduct', methods=['POST'])
+def update_product_post():
+    new_price = int(request.form.get('new_price'))
+    new_title = request.form.get('new_title')
+    new_description = request.form.get('new_description')
+    title = request.form.get('title')
+    # use backend api to update the user attributes
+    success = update_product(new_price, new_title, new_description, title)
+    error_message = None
+    if not success:
+        error_message = "Product Update Failed"
+    # if there is any error messages when creating a product
+    # at the backend, go back to the create product page.
+    if error_message:
+        return render_template('updateproduct.html', message=error_message)
+    else:
+        return redirect('/', code=303)
+
 @app.route('/createproduct', methods=['Get'])
 def create_product_get():
     return render_template('createproduct.html', 
                            message='Please enter product info below:')
 
-
 @app.route('/createproduct', methods=['POST'])
-def create_product_get():
-
+def create_product_post():
     # retrieves current logged in user's email
     owner_email = session['logged_in']
-    # last_modified_date = Tom knows the code that needs to be added here
-    price = request.form.get('price')
+    today = date.today()
+    current_date = today.strftime("%d/%m/%Y")
+    last_modified_date = current_date[6:10] + \
+            "-" + current_date[3:5] + "-" + current_date[0:2]
+    price = int(request.form.get('price'))
     title = request.form.get('title')
     description = request.form.get('description')
     error_message = None
-
     # use backend api to update the user attributes
     success = create_product(price, title, description, 
                              last_modified_date, owner_email)
