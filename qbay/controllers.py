@@ -136,7 +136,10 @@ def update_user_post():
 
 @app.route('/updateproduct', methods=['Get'])
 def update_product_get():
-    return render_template('updateproduct.html', message="Please enter new product info below:", pName=request.args.get('pName'))
+    return render_template('updateproduct.html', 
+                           message="Please enter new product info below:", 
+                           pName=request.args.get('pName'))
+
 
 @app.route('/updateproduct', methods=['POST'])
 def update_product_post():
@@ -156,10 +159,12 @@ def update_product_post():
     else:
         return redirect('/', code=303)
 
+
 @app.route('/createproduct', methods=['Get'])
 def create_product_get():
     return render_template('createproduct.html', 
                            message='Please enter product info below:')
+
 
 @app.route('/createproduct', methods=['POST'])
 def create_product_post():
@@ -168,7 +173,7 @@ def create_product_post():
     today = date.today()
     current_date = today.strftime("%d/%m/%Y")
     last_modified_date = current_date[6:10] + \
-            "-" + current_date[3:5] + "-" + current_date[0:2]
+        "-" + current_date[3:5] + "-" + current_date[0:2]
     price = int(request.form.get('price'))
     title = request.form.get('title')
     description = request.form.get('description')

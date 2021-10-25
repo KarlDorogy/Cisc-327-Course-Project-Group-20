@@ -103,7 +103,6 @@ def update_product(new_price, new_title,
         # Gets the current last modified date
         last_date = existed_product.last_modified_date
 
-        
         # Sets the last modified date to current date
         today = date.today()
         current_date = today.strftime("%d/%m/%Y")
