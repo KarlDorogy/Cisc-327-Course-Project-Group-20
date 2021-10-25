@@ -155,7 +155,8 @@ def update_product_post():
     # if there is any error messages when creating a product
     # at the backend, go back to the create product page.
     if error_message:
-        return render_template('updateproduct.html', message=error_message)
+        return render_template('updateproduct.html', message=error_message, 
+                               pName=request.args.get('pName'))
     else:
         return redirect('/', code=303)
 
@@ -172,8 +173,8 @@ def create_product_post():
     owner_email = session['logged_in']
     today = date.today()
     current_date = today.strftime("%d/%m/%Y")
-    last_modified_date = current_date[6:10] + \
-        "-" + current_date[3:5] + "-" + current_date[0:2]
+    last_modified_date = (current_date[6:10] + 
+                          "-" + current_date[3:5] + "-" + current_date[0:2])
     price = int(request.form.get('price'))
     title = request.form.get('title')
     description = request.form.get('description')
