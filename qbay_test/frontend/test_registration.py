@@ -143,34 +143,29 @@ class FrontEndHomePageTest(BaseCase):
         self.assert_element("#shipping-header")
         self.assert_text("None", "#shipping-header")
     
-    def test_login_success(self, *_):
+    def test_login__frontend_r2_1(self, *_):
         """
-        This is a sample front end unit test to login to home page
-        and verify if the tickets are correctly listed.
+        This is BlackBox Functionality Testing for R2-1:
+        A user can log in using her/his email address and the password.
         """
         # register new user for frontend login test to use
-        register("u1", "test1@test.com", "@Password")
+        self.open(base_url + '/register')
+        self.type("#email", "test1@r21.com")
+        self.type("#name", "u0")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
 
         # open login page
         self.open(base_url + '/login')
         # fill email and password
-        self.type("#email", "test1@test.com")
+        self.type("#email", "test1@r21.com")
         self.type("#password", "@Password")
         # click enter button
         self.click('input[type="submit"]')
-
-        # after clicking on the browser (the line above)
-        # the front-end code is activated
-        # and tries to call get_user function.
-        # The get_user function is supposed to read data from database
-        # and return the value. However, here we only want to test the
-        # front-end, without running the backend logics.
-        # so we patch the backend to return a specific user instance,
-        # rather than running that program. (see @ annotations above)
 
         # open home page
         self.open(base_url)
         # test if the page loads correctly
         self.assert_element("#welcome-header")
-        self.assert_text("Welcome u1!", "#welcome-header")
-        # other available APIs
+        self.assert_text("Welcome u0!", "#welcome-header")
