@@ -27,9 +27,9 @@ class FrontEndHomePageTest(BaseCase):
         # click enter button
         self.click('input[type="submit"]')
         
-        #open login page
+        # open login page
         self.open(base_url + '/login')
-        #fill email and password
+        # fill email and password
         self.type("#email", "test0@test.com")
         self.type("#password", "@Password")
         # click enter button
@@ -50,7 +50,6 @@ class FrontEndHomePageTest(BaseCase):
         self.assert_element("#welcome-header")
         self.assert_text("Welcome u0!", "#welcome-header")
         # other available APIs
-
 
     def test_login_success(self, *_):
         """
