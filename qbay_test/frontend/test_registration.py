@@ -86,7 +86,6 @@ class FrontEndHomePageTest(BaseCase):
         self.assert_element("#message")
         self.assert_text("Registration Failed.", "#message")
      
-    
     def test_register_frontend_r1_6(self, *_):
         """
         This is BlackBox Input Boundary/Paritioning Testing 
@@ -145,6 +144,24 @@ class FrontEndHomePageTest(BaseCase):
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text('Please login', "#message")
+
+    def test_register_frontend_r1_7(self, *_):
+        """
+        This is a BlackBox Functionality Test for R1-7.
+        Users are uniquely identified by his/her email address
+        so trying to register using the same email as a previous
+        test should fail.
+        """
+
+        # P2: invalid email (already in database)
+        self.open(base_url + '/register')
+        self.type("#email", "test69@test.com")
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Registration Failed.", "#message")
 
     def test_register_frontend_r1_8(self, *_):
         """
