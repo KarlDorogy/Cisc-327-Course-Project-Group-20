@@ -74,7 +74,7 @@ class FrontEndHomePageTest(BaseCase):
         self.type("#password2", "@Password")
         self.click('input[type="submit"]')
         self.assert_element("#message")
-        self.assert_text("Please login.", "#message")
+        self.assert_text("Please login", "#message")
 
         # P2: invalid email (already in database)
         self.open(base_url + '/register')
@@ -183,8 +183,6 @@ class FrontEndHomePageTest(BaseCase):
         self.type("#password", "@Password")
         self.type("#password2", "@Password")
         self.click('input[type="submit"]')
-        self.assert_element("#message")
-        self.assert_text("Please login.", "#message")
 
         self.open(base_url + '/login')
         self.type("#email", "test3@test.com")
