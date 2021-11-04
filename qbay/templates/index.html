@@ -9,11 +9,9 @@
 <a href='/updateuser' class="btn btn-primary" id="btn-submit" >Update Profile </a>    
 </h2>
 <div>
-    <h5>Current Shipping Adress: {{ user.shipping_address }}
-    <br>Current Postal Code: {{ user.postal_code }}
-    </h5>
+    <h5 id="shipping-header">Current Shipping Adress: {{ user.shipping_address }}</h5>
+    <h5 id="postal-header">Current Postal Code: {{ user.postal_code }}</h5>
 </div>
-
 <h3>Here are all available products:
 <a href='/createproduct' class="btn btn-primary" id="btn-submit" >Create Product </a>
 </h3>
