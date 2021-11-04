@@ -9,8 +9,8 @@ In r1_1 he used BlackBox Input Partition Testing.
 In r1_6 he used a Input Partition Testing with a combination of Bounday testing
 Lastly, in r1_8 he used BlackBox Functionality Testing.
 <h4>Q3:</h4> 
-Difficulties in orginal structuring of the testing functions for registration testing
-Figuring out partitions and testing methods for specific A2 requirments
+Difficulties in orginal set-up structuring of the testing functions for registration testing
+and trying to figuring out partitions and testing methods for specific A2 requirments
 <h4>Q4:</h4>
 Complete all r1 and r2 testing requirments by Thursday Night and complete r3 testing requirments on friday
 
@@ -29,13 +29,15 @@ Doug's plan is to finish r1 and r2 by thursday leaving r3 for friday
 
 ## Team Member: Briggs Fisher
 <h4>Q1:</h4>
-Briggs was working in the branch_Tom branch
+The branch Briggs worked on was branch_Tom where all work for the update product was done in newly added update product files to avoid merge conflicts.
 <h4>Q2:</h4> 
-None
+Test cases were written for R5-2 using input partitioning testing where input was partitioned into
+increased price and decreased price, and a test case was written for R5-1 using input partitioning testing
+where the input was partitioned into updating attributes that are the attributes of owner_email or last_modified date, and updating the attributes that aren’t owner_email or last_modified date.
 <h4>Q3:</h4> 
-None
+Tests for update product relied on a product being created beforehand and the product created beforehand must be a valid product attached to a logged in user
 <h4>Q4:</h4>
-None
+Briggs will finish the last two tests of the update product within the last two days and he plans to finish R5-3 on Thursday and R5-4 on Friday.
 
 ## Team Member: Tom Lin
 <h4>Q1:</h4>
