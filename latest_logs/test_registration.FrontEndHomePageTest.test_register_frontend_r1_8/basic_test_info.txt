@@ -1,17 +1,17 @@
-test_product.py::FrontEndCreateProductTest::test_create_product_r4_5
+test_registration.py::FrontEndHomePageTest::test_register_frontend_r1_8
 --------------------------------------------------------------------
-Last Page: http://127.0.0.1:8081/createproduct
+Last Page: http://127.0.0.1:8081/
   Browser: chrome
-Timestamp: 1635994373  (Unix Timestamp)
+Timestamp: 1635996742  (Unix Timestamp)
      Date: Wednesday, November 3, 2021
-     Time: 10:52:53 PM  (Eastern Daylight Time, UTC-05:00)
+     Time: 11:32:22 PM  (Eastern Daylight Time, UTC-05:00)
 --------------------------------------------------------------------
 Traceback: File "c:\users\tom\appdata\local\programs\python\python39\lib\unittest\case.py", line 593, in run
     self._callTestMethod(testMethod)
   File "c:\users\tom\appdata\local\programs\python\python39\lib\unittest\case.py", line 550, in _callTestMethod
     method()
-  File "C:\Users\Tom\Cisc-327-Course-Project-Group-20\qbay_test\frontend\test_product.py", line 122, in test_create_product_r4_5
-    self.assert_element("#welcome-header")
+  File "C:\Users\Tom\Cisc-327-Course-Project-Group-20\qbay_test\frontend\test_registration.py", line 187, in test_register_frontend_r1_8
+    self.assert_element("#shipping-header")
   File "c:\users\tom\appdata\local\programs\python\python39\lib\site-packages\seleniumbase\fixtures\base_case.py", line 8797, in assert_element
     self.wait_for_element_visible(selector, by=by, timeout=timeout)
   File "c:\users\tom\appdata\local\programs\python\python39\lib\site-packages\seleniumbase\fixtures\base_case.py", line 6239, in wait_for_element_visible
@@ -21,4 +21,4 @@ Traceback: File "c:\users\tom\appdata\local\programs\python\python39\lib\unittes
   File "c:\users\tom\appdata\local\programs\python\python39\lib\site-packages\seleniumbase\fixtures\page_actions.py", line 163, in timeout_exception
     raise exception(message)
 Exception: Message: 
- Element {#welcome-header} was not present after 6 seconds!
+ Element {#shipping-header} was not present after 6 seconds!
