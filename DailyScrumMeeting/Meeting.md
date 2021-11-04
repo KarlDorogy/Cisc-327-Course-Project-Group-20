@@ -25,7 +25,24 @@ r1_9 checks that upon registration, the account has no postal code.
 <h4>Q3:</h4> 
 No difficulties reported
 <h4>Q4:</h4>
-Dougs  plan is to finish r1 and r2 by thursday leaving r3 for friday
+Doug's plan is to finish r1 and r2 by thursday leaving r3 for friday
 
+## Team Member: Briggs Fisher
+<h4>Q1:</h4>
+Briggs was working in the branch_Tom branch
+<h4>Q2:</h4> 
+None
+<h4>Q3:</h4> 
+None
+<h4>Q4:</h4>
+None
 
-
+## Team Member: Tom Lin
+<h4>Q1:</h4>
+Tom was working in the branch_Tom branch
+<h4>Q2:</h4> 
+Tom completed two tests, R4-3 and R4-5. They were both tested using Input Partitioning with Input Boundary Testing
+<h4>Q3:</h4> 
+The user must be registered and logged in before they can create products, and I was not able to test my tests unless a user was already registered.
+<h4>Q4:</h4>
+Tom's plan is to complete all of the tests by friday afternoon at the latest
