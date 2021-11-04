@@ -87,7 +87,7 @@ class FrontEndHomePageTest(BaseCase):
         self.assert_text("Registration Failed.", "#message")
      
     
-    def test_login_success(self, *_):
+    def test_register_frontend_r1_6(self, *_):
         """
         This is BlackBox Input Boundary/Paritioning Testing 
         for R1-6. User name has to be longer than 2 characters 
@@ -173,7 +173,7 @@ class FrontEndHomePageTest(BaseCase):
     def test_register_frontend_r1_9(self, *_):
         """
         This is BlackBox Functionality Test for R1-9.
-        Users postal code is empty upon registration
+        Checks users postal code is empty upon registration.
         """
 
         # P1: register new user and check postal code is empty
