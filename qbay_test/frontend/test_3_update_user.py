@@ -27,7 +27,6 @@ class FrontEndUpdateUserPageTest(BaseCase):
 
         # R1-5 Testing:
         # P1: empty
-        #self.click('#btn-update-profile') # click on update profile btn
         self.open(base_url + '/updateuser')
         self.type("#name", " ")
         self.type("#shippingaddress", "Default")
