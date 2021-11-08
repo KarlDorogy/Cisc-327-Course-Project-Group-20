@@ -83,7 +83,77 @@ class FrontEndLoginPageTest(BaseCase):
         self.assert_text("Welcome u4!", "#welcome-header")
 
         # R1-3 Testing:
-        # (GOES HERE)
+        # P1: valid dot string email
+        self.open(base_url + '/login')
+        self.type("#email", "test.69@test.com")
+        self.type("#password", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#welcome-header")
+        self.assert_text("Welcome GoofyGoober!", "#welcome-header")
+
+        # P2: valid quote string email
+        self.open(base_url + '/login')
+        self.type("#email", '"test<>69"@test.com')
+        self.type("#password", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#welcome-header")
+        self.assert_text("Welcome GoofyGoober!", "#welcome-header")
+
+        # P3: valid  domain email
+        self.open(base_url + '/login')
+        self.type("#email", "test6.9@test.com")
+        self.type("#password", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#welcome-header")
+        self.assert_text("Welcome GoofyGoober!", "#welcome-header")
+
+        # P4: valid IPv4 domain email
+        self.open(base_url + '/login')
+        self.type("#email", "test69@[192.0.2.146]")
+        self.type("#password", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#welcome-header")
+        self.assert_text("Welcome GoofyGoober!", "#welcome-header")
+
+        # P5: valid IPv6 domain email
+        self.open(base_url + '/login')
+        self.type("#email", "test69@[2001:db8:3333:4444:5555:6666:7777:8888]")
+        self.type("#password", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#welcome-header")
+        self.assert_text("Welcome GoofyGoober!", "#welcome-header")
+
+        # P6: invalid dot string email
+        self.open(base_url + '/login')
+        self.type("#email", "test..69@test.com")
+        self.type("#password", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("login failed", "#message")
+
+        # P7: invalid quote string email
+        self.open(base_url + '/login')
+        self.type("#email", '""@test.com')
+        self.type("#password", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("login failed", "#message")
+
+        # P8: invalid domain email
+        self.open(base_url + '/login')
+        self.type("#email", "test69@te-st.com")
+        self.type("#password", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("login failed", "#message")
+
+        # P9: invalid IP domain email
+        self.open(base_url + '/login')
+        self.type("#email", "test69@[4.2.0:6.9]")
+        self.type("#password", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("login failed", "#message")
 
         # R1-4 Testing:
         # P1: lowercase, less than 6 chars, no uppercase, no special char
