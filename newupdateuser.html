@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Update Profile{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<h4 id='message'>{{message}}</h4>
+<form method="post">
+  <div class="form-group">
+    <label for="new_price">New Price</label>
+    <input class="form-control" name="new_price" id="new_price" required>
+    <label for="new_title">New Title</label>
+    <input class="form-control" name="new_title" id="new_title" required>
+    <label for="new_description">New Description</label>
+    <input class="form-control" name="new_description" id="new_description" required>
+    <input class="btn btn-primary" type="submit" value="Update">
+    <label for="title">Previous Title</label>
+    <input class="form-control" name="title" id="title" required>
+    <a href='/' class="btn btn-primary" id="btn-submit" >Cancel</a>
+  </div>
+</form>
+{% endblock %}
