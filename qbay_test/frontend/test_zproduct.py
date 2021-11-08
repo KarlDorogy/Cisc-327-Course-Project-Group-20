@@ -228,7 +228,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.type("#title", "ProductR42andenoughcharacterstohavemorethantwentycharacters")
         self.type("#description", "This is a description that is long")
         self.click('input[type="submit"]')
-        self.assert_element("#welcome-header")
+        self.assert_element("#message")
+        self.assert_text("Product Creation Failed", "#message")
 
         # Case 3 The description is the same length as the title (Fail)
         self.open(base_url + '/createproduct')
@@ -236,7 +237,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.type("#title", "ProductR43andenoughcharacterstohavemorethantwentycharacters")
         self.type("#description", "ProductR43andenoughcharacterstohavemorethantwentycharacters")
         self.click('input[type="submit"]')
-        self.assert_element("#welcome-header")
+        self.assert_element("#message")
+        self.assert_text("Product Creation Failed", "#message")
 
     def test_create_product_r4_5(self, *_):
         #Logs in to a user before creating products
@@ -284,33 +286,6 @@ class FrontEndCreateProductTest(BaseCase):
         self.assert_element("#message")
         self.assert_text("Product Creation Failed", "#message")
 
-    def date_compare(date):
-        # Checks if year is within range
-        if date[4] != "-" or date[7] != "-":
-            return False
-        last_modified_year = int(date[0:4])
-        if last_modified_year < 2021 or last_modified_year > 2025:
-            return False
-        last_modified_month = int(date[5:7])
-        if last_modified_month < 1 or last_modified_month > 12:
-            return False
-        last_modified_day = int(date[8:10])
-        if last_modified_day < 1 or last_modified_day > 31:
-            return False
-
-        # Year range check but if year is 2021
-        if last_modified_year == 2021:
-            if last_modified_month == 1:
-                if last_modified_day < 2:
-                    return False
-
-        # Year range check but if year is 2025
-        if last_modified_year == 2025:
-            if last_modified_month > 1:
-                return False
-            else:
-                if last_modified_day >= 2:
-                    return False
 
     def test_create_product_r4_6(self,*_):
         #Logs in to a user before creating products
@@ -326,57 +301,37 @@ class FrontEndCreateProductTest(BaseCase):
         #P1 The date must be after 2021-01-02 (Success)
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
-        pPrice = self.get_text("#price")
         self.type("#title", "ProductR61")
-        pTitle = self.get_text("#title")
         self.type("#description", "This is a very long test description that is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
-        product = self.get_text("#" + pTitle)
-        date = product[(pTitle.len()+pPrice.len()+4):(pTitle.len()+pPrice.len()+4)+10]
-        if(self.date_compare(date)):
-            self.assert_text("#welcome-header")
+        
         
         #P2 The date must be before 2025-01-02 (Success)
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
-        pPrice = self.get_text("#price")
         self.type("#title", "ProductR62")
-        pTitle = self.get_text("#title")
         self.type("#description", "This is a very long test description that is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
-        product = self.get_text("#" + pTitle)
-        date = product[(pTitle.len()+pPrice.len()+4):(pTitle.len()+pPrice.len()+4)+10]
-        if(self.date_compare(date)):
-            self.assert_element("#welcome-header")
+        
             
 
     def test_create_r4_7(self, *_):
-        
-        #R4-7: owner_email cannot be empty. The owner of the corresponding product must exist in the database.
-
-        #Input Partitioning 
-
-        #P1 The owner_email cannot be empty (Fail)
-        self.open(base_url + '/createproduct')
-        self.type("#price", 11)
-        self.type("#title", "ProductR71")
-        self.type("#description", "This is a very long test description that is at least 20 characters long")
-        self.click('input[type="submit"]')
-        self.assert_element("#message")
-        self.assert_text("Product Creation Failed", "#message")
-
-        #P1 The owner_email cannot be empty (Success)
         #Logs in to a user before creating products
         self.open(base_url + '/login')
         self.type("#email", "test4@r16.com")
         self.type("#password", "@Password")
         self.click('input[type="submit"]')
+        
+        #R4-7: owner_email cannot be empty. The owner of the corresponding product must exist in the database.
 
+        #Input Partitioning 
+
+        #P1 The owner_email cannot be empty (Success)
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
-        self.type("#title", "ProductR72")
+        self.type("#title", "ProductR71")
         self.type("#description", "This is a very long test description that is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
@@ -384,7 +339,7 @@ class FrontEndCreateProductTest(BaseCase):
         #P2 The owner of the corresponding product must exist in the database. (Success)
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
-        self.type("#title", "ProductR73")
+        self.type("#title", "ProductR72")
         self.type("#description", "This is a very long test description that is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
