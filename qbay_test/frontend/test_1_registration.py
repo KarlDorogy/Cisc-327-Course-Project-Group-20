@@ -90,8 +90,9 @@ class FrontEndRegisterPageTest(BaseCase):
 
     def test_register_frontend_r1_3(self, *_):
         """
-        This is BlackBox Input Partition Testing for R1-2.
-        Users are uniquely identified by his/her email address
+        This is BlackBox Input Partition Testing for R1-3.
+        Emails used to create accounts must follow RFC 5322
+        guidelines.
         """
 
         # P1: valid dot string email
@@ -106,7 +107,7 @@ class FrontEndRegisterPageTest(BaseCase):
 
         # P2: valid quote string email
         self.open(base_url + '/register')
-        self.type("#email", '"test<@>69"@test.com')
+        self.type("#email", '"test<>69"@test.com')
         self.type("#name", "GoofyGoober")
         self.type("#password", "@Password")
         self.type("#password2", "@Password")
