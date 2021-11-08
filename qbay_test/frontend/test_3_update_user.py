@@ -35,7 +35,8 @@ class FrontEndUpdateUserPageTest(BaseCase):
         self.assert_element("#welcome-header")
         self.assert_text("Welcome Sherlock Holmes!", "#welcome-header")
         self.assert_element("#shipping-header")
-        self.assert_text("Current Shipping Address: 221B Baker Street", "#shipping-header")
+        self.assert_text("Current Shipping Address: 221B Baker Street",
+                         "#shipping-header")
         self.assert_element("#postal-header")
         self.assert_text("Current Postal Code: M1C 8X3", "#postal-header")
         
@@ -76,7 +77,8 @@ class FrontEndUpdateUserPageTest(BaseCase):
         self.click('input[type="submit"]')
         # redirected to home page with address if update was successful
         self.assert_element("#shipping-header")
-        self.assert_text("Current Shipping Address: best address", "#shipping-header")
+        self.assert_text("Current Shipping Address: best address",
+                         "#shipping-header")
 
         # P3: special character
         self.open(base_url + '/updateuser')
