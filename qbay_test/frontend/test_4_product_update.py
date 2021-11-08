@@ -264,3 +264,4 @@ class FrontEndCreateProductUpdateTest(BaseCase):
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Product Update Failed", "#message")
+        

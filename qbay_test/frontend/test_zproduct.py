@@ -14,3 +14,4 @@ class FrontEndCreateProductTest(BaseCase):
         self.type("#description", "This is a test description \
                                   made to be at least twenty characters long")
         self.click('input[type="submit"]')
+        
