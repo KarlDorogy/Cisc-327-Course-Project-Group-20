@@ -1,19 +1,21 @@
 test_registration.py::FrontEndHomePageTest::test_login_success
 --------------------------------------------------------------------
-Last Page: http://127.0.0.1:8081/login
+Last Page: [WARNING! Browser Not Open!]
   Browser: chrome
-Timestamp: 1636002225  (Unix Timestamp)
-     Date: Thursday, November 4, 2021
-     Time: 1:03:45 AM  (Eastern Daylight Time, UTC-05:00)
+Timestamp: 1636338621  (Unix Timestamp)
+     Date: Sunday, November 7, 2021
+     Time: 9:30:21 PM  (Eastern Daylight Time, UTC-05:00)
 --------------------------------------------------------------------
 Traceback: File "c:\users\tom\appdata\local\programs\python\python39\lib\unittest\case.py", line 593, in run
     self._callTestMethod(testMethod)
   File "c:\users\tom\appdata\local\programs\python\python39\lib\unittest\case.py", line 550, in _callTestMethod
     method()
-  File "C:\Users\Tom\Cisc-327-Course-Project-Group-20\qbay_test\frontend\test_registration.py", line 39, in test_login_success
-    self.assert_element("#welcome-header")
-  File "c:\users\tom\appdata\local\programs\python\python39\lib\site-packages\seleniumbase\fixtures\base_case.py", line 8797, in assert_element
-    self.wait_for_element_visible(selector, by=by, timeout=timeout)
+  File "C:\Users\Tom\Cisc-327-Course-Project-Group-20\qbay_test\frontend\test_registration.py", line 22, in test_login_success
+    self.type("#email", "test0@test.com")
+  File "c:\users\tom\appdata\local\programs\python\python39\lib\site-packages\seleniumbase\fixtures\base_case.py", line 610, in type
+    self.update_text(selector, text, by=by, timeout=timeout, retry=retry)
+  File "c:\users\tom\appdata\local\programs\python\python39\lib\site-packages\seleniumbase\fixtures\base_case.py", line 470, in update_text
+    element = self.wait_for_element_visible(
   File "c:\users\tom\appdata\local\programs\python\python39\lib\site-packages\seleniumbase\fixtures\base_case.py", line 6239, in wait_for_element_visible
     return page_actions.wait_for_element_visible(
   File "c:\users\tom\appdata\local\programs\python\python39\lib\site-packages\seleniumbase\fixtures\page_actions.py", line 370, in wait_for_element_visible
@@ -21,4 +23,4 @@ Traceback: File "c:\users\tom\appdata\local\programs\python\python39\lib\unittes
   File "c:\users\tom\appdata\local\programs\python\python39\lib\site-packages\seleniumbase\fixtures\page_actions.py", line 163, in timeout_exception
     raise exception(message)
 Exception: Message: 
- Element {#welcome-header} was not present after 6 seconds!
+ Element {#email} was not present after 10 seconds!

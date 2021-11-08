@@ -20,7 +20,7 @@
 <div id="products">
     {% for product in products %}
     <div>
-        <h5>{{ product.title }}: ${{ product.price }} {{ product.last_modified_date }} <a href="/updateproduct?pName={{ product.title }}">update</a></h5>
+        <h5 id="product">{{ product.title }}: ${{ product.price }} {{ product.last_modified_date }} <a href="/updateproduct?pName={{ product.title }}pLastdate={{ product.last_modified_date }}">update</a></h5>
     </div>
     {% endfor %}
 </div>
