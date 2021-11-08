@@ -14,8 +14,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.type("#password", "@Password")
         self.click('input[type="submit"]')
 
-        # R4-1: The title of the product has to be alphanumeric-only, 
-        # and space allowed only if it is not as prefix and suffix.
+        # R4-1: The title of the product has to be alphanumeric-only, and 
+        # space allowed only if it is not as prefix and suffix.
 
         # Input Partitioning
 
@@ -23,8 +23,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
         self.type("#title", "ProductR11")
-        self.type("#description", """This is a very long test description 
-                                    that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
@@ -32,8 +32,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
         self.type("#title", "%Beans")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Product Creation Failed", "#message")
@@ -42,8 +42,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
         self.type("#title", "Product R12")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
@@ -51,8 +51,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
         self.type("#title", " ProductR13")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Product Creation Failed", "#message")
@@ -61,8 +61,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
         self.type("#title", "ProductR14 ")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Product Creation Failed", "#message")
@@ -83,8 +83,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
         self.type("#title", "ProductR2")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
@@ -92,10 +92,10 @@ class FrontEndCreateProductTest(BaseCase):
 
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
-        self.type("#title", """jkasdhakdhakldhasdhakljjdashjdajkdhkaj
-                                sldhakljdhjsadnakjldhnwajkcjdgajsdkahjSSSSS""")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#title", "jkasdhakdhakldhasdhakljjdashjdajkdhkajsldhakljdh"
+                  + "sadnakjldhnwajkcffjdgajsdkahjSSSSS")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Product Creation Failed", "#message")
@@ -107,26 +107,25 @@ class FrontEndCreateProductTest(BaseCase):
         self.type("#password", "@Password")
         self.click('input[type="submit"]')
 
-        # R4-3 The description of the product can be arbitrary characters, 
-        # with a minimum length of 20 characters
-        # and a maximum of 2000 characters.
+        # R4-3 The description of the product can be arbitrary characters, with 
+        # a minimum length of 20 characters and a maximum of 2000 characters.
 
         # Input Boundary Testing
         # Input Partitioning
 
-        # P1 The description of the product has 
-        # to have a minimum length of 20 characters (Success)
+        # P1 The description of the product has to have a minimum length of 20
+        #  characters (Success)
 
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
         self.type("#title", "ProductR31")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
-        # P1 The description of the product has 
-        # to have a minimum length of 20 characters (Failed)
+        # P1 The description of the product has to have a minimum length of 
+        # 20 characters (Failed)
 
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
@@ -141,8 +140,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 1000)
         self.type("#title", "ProductR33")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
@@ -232,16 +231,16 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductR4")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
         # Case 2 The description is shorter than the title (Fail)
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
-        self.type("#title", """ProductR42andenoughcharacter
-                                stohavemorethantwentycharacters""")
+        self.type("#title", "ProductR42andenoughcharacterstohavemorethantwent"
+                  + "ycharacters")
         self.type("#description", "This is a description that is long")
         self.click('input[type="submit"]')
         self.assert_element("#message")
@@ -250,10 +249,10 @@ class FrontEndCreateProductTest(BaseCase):
         # Case 3 The description is the same length as the title (Fail)
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
-        self.type("#title", """ProductR43andenoughcharacter
-                                stohavemorethantwentycharacters""")
-        self.type("#description", """ProductR43andenoughcharacter
-                                    stohavemorethantwentycharacters""")
+        self.type("#title", "ProductR43andenoughcharacterstohavemorethantwent"
+                  + "ycharacters")
+        self.type("#description", "ProductR43andenoughcharacterstohavemoretha"
+                  + "ntwentycharacters")
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Product Creation Failed", "#message")
@@ -272,8 +271,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductR51")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
@@ -281,8 +280,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 9)
         self.type("#title", "ProductR52")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Product Creation Failed", "#message")
@@ -292,8 +291,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductR53")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
@@ -302,8 +301,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 10001)
         self.type("#title", "ProductR54")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Product Creation Failed", "#message")
@@ -315,8 +314,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.type("#password", "@Password")
         self.click('input[type="submit"]')
 
-        # R4-6: last_modified_date must be 
-        # after 2021-01-02 and before 2025-01-02.
+        # R4-6: last_modified_date must be after 2021-01-02 and before 
+        # 2025-01-02.
 
         # Input Partitioning
 
@@ -324,8 +323,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductR61")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
         
@@ -333,8 +332,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductR62")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
         
@@ -345,8 +344,8 @@ class FrontEndCreateProductTest(BaseCase):
         self.type("#password", "@Password")
         self.click('input[type="submit"]')
         
-        # R4-7: owner_email cannot be empty. The owner of the 
-        # corresponding product must exist in the database.
+        # R4-7: owner_email cannot be empty. The owner of the corresponding
+        #  product must exist in the database.
 
         # Input Partitioning 
 
@@ -354,18 +353,18 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductR71")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
-        # P2 The owner of the corresponding
-        # product must exist in the database. (Success)
+        # P2 The owner of the corresponding product must exist in the 
+        # database. (Success)
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductR72")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
@@ -384,15 +383,15 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductR81")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductR82")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
 
@@ -400,15 +399,15 @@ class FrontEndCreateProductTest(BaseCase):
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductSAME")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#welcome-header")
         self.open(base_url + '/createproduct')
         self.type("#price", 11)
         self.type("#title", "ProductSAME")
-        self.type("#description", """This is a very long test description
-                                     that is at least 20 characters long""")
+        self.type("#description", "This is a very long test description that "
+                  + "is at least 20 characters long")
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Product Creation Failed", "#message")
