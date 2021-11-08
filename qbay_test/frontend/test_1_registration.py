@@ -87,6 +87,103 @@ class FrontEndRegisterPageTest(BaseCase):
         self.click('input[type="submit"]')
         self.assert_element("#message")
         self.assert_text("Registration Failed.", "#message")
+
+    def test_register_frontend_r1_3(self, *_):
+        """
+        This is BlackBox Input Partition Testing for R1-3.
+        Emails used to create accounts must follow RFC 5322
+        guidelines.
+        """
+
+        # P1: valid dot string email
+        self.open(base_url + '/register')
+        self.type("#email", "test.69@test.com")
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Please login", "#message")
+
+        # P2: valid quote string email
+        self.open(base_url + '/register')
+        self.type("#email", '"test<>69"@test.com')
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Please login", "#message")
+
+        # P3: valid  domain email
+        self.open(base_url + '/register')
+        self.type("#email", "test6.9@test.com")
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Please login", "#message")
+
+        # P4: valid IPv4 domain email
+        self.open(base_url + '/register')
+        self.type("#email", "test69@[192.0.2.146]")
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Please login", "#message")
+
+        # P5: valid IPv6 domain email
+        self.open(base_url + '/register')
+        self.type("#email", "test69@[2001:db8:3333:4444:5555:6666:7777:8888]")
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Please login", "#message")
+
+        # P6: invalid dot string email
+        self.open(base_url + '/register')
+        self.type("#email", "test..69@test.com")
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Registration Failed.", "#message")
+
+        # P7: invalid quote string email
+        self.open(base_url + '/register')
+        self.type("#email", '""@test.com')
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Registration Failed.", "#message")
+
+        # P8: invalid domain email
+        self.open(base_url + '/register')
+        self.type("#email", "test69@te-st.com")
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Registration Failed.", "#message")
+
+        # P9: invalid IP domain email
+        self.open(base_url + '/register')
+        self.type("#email", "test69@[4.2.0:6.9]")
+        self.type("#name", "GoofyGoober")
+        self.type("#password", "@Password")
+        self.type("#password2", "@Password")
+        self.click('input[type="submit"]')
+        self.assert_element("#message")
+        self.assert_text("Registration Failed.", "#message")
     
     def test_register_frontend_r1_4(self, *_):
         """

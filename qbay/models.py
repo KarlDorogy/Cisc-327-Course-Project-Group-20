@@ -464,11 +464,11 @@ def update_user(find_email, new_name=None,
 
     # Updating Shipping address
     if (new_shipping_address is not None):
-        # check if new shipping address contains only alphanumeric characters
-        if (new_shipping_address.strip() == 0):
-            return False
         # check if new shipping address is non-empty
-        elif (new_shipping_address.isalnum() is False):
+        if (len(new_shipping_address.strip()) == 0):
+            return False
+        # check if new shipping address contains only alphanumeric characters
+        elif (new_shipping_address.replace(" ", "").isalnum() is False):
             return False
         else:
             modify_user.shipping_address = new_shipping_address
