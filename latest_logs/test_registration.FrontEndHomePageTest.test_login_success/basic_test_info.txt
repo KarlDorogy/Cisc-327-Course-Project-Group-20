@@ -1,0 +1,24 @@
+test_registration.py::FrontEndHomePageTest::test_login_success
+--------------------------------------------------------------------
+Last Page: http://127.0.0.1:8081/login
+  Browser: chrome
+Timestamp: 1636343598  (Unix Timestamp)
+     Date: Sunday, November 7, 2021
+     Time: 10:53:18 PM  (Eastern Daylight Time, UTC-05:00)
+--------------------------------------------------------------------
+Traceback: File "c:\users\briggs\appdata\local\programs\python\python38\lib\unittest\case.py", line 676, in run
+    self._callTestMethod(testMethod)
+  File "c:\users\briggs\appdata\local\programs\python\python38\lib\unittest\case.py", line 633, in _callTestMethod
+    method()
+  File "C:\Users\Briggs\Desktop\2021Classes\CISC327\327Repository\Cisc-327-Course-Project-Group-20\qbay_test\frontend\test_registration.py", line 39, in test_login_success
+    self.assert_element("#welcome-header")
+  File "C:\Users\Briggs\AppData\Roaming\Python\Python38\site-packages\seleniumbase\fixtures\base_case.py", line 8797, in assert_element
+    self.wait_for_element_visible(selector, by=by, timeout=timeout)
+  File "C:\Users\Briggs\AppData\Roaming\Python\Python38\site-packages\seleniumbase\fixtures\base_case.py", line 6239, in wait_for_element_visible
+    return page_actions.wait_for_element_visible(
+  File "C:\Users\Briggs\AppData\Roaming\Python\Python38\site-packages\seleniumbase\fixtures\page_actions.py", line 370, in wait_for_element_visible
+    timeout_exception(NoSuchElementException, message)
+  File "C:\Users\Briggs\AppData\Roaming\Python\Python38\site-packages\seleniumbase\fixtures\page_actions.py", line 163, in timeout_exception
+    raise exception(message)
+Exception: Message: 
+ Element {#welcome-header} was not present after 6 seconds!
