@@ -2,7 +2,7 @@ from seleniumbase import BaseCase
 
 from qbay_test.conftest import base_url
 from unittest.mock import patch
-from qbay.models import User
+from qbay.models import *
 
 
 class FrontEndCreateProductTest(BaseCase):
