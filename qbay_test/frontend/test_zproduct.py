@@ -5,7 +5,6 @@ from unittest.mock import patch
 from qbay.models import *
 
 
-
 class FrontEndCreateProductTest(BaseCase):
 
     def test_create_product_r4_1(self, *_):
