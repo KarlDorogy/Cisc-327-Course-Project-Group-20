@@ -90,13 +90,37 @@ def update_product(new_price, new_title,
     if len(product_list) < 1:
         return False
 
-    # Updates every existing product object to new inputed values 
+    # Updates every existing product object to new inputed values
     for existed_product in product_list:
-
-        existed_product.description = new_description
+        # Checks if characters in the title are alphanumerical
+        for character in new_title:
+            if new_title.index(character) == 0:
+                if character == " ":
+                    return False
+            if new_title.index(character) == len(new_title) - 1:
+                if character == " ":
+                    return False
+            ascii_value = ord(character)
+            if ((ascii_value >= 33 and ascii_value <= 47) or
+               (ascii_value >= 58 and ascii_value <= 64) or
+               (ascii_value >= 123 and ascii_value <= 126)):
+                return False
+        # Checks if title is long enough
+        if len(new_title) > 80:
+            return False
         existed_product.title = new_title
+
+        # Checks if description is within range
+        if (len(new_description) < 20 or len(new_description) > 2000 or
+           len(new_description) <= len(title)):
+            return False
+        existed_product.description = new_description
+
         # Checks if the new price is greater than the old price
         if(existed_product.price > new_price):
+            return False
+        # Checks if price is within range
+        if new_price < 10 or new_price > 10000:
             return False
         existed_product.price = new_price
         
