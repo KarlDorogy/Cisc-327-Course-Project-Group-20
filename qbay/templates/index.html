@@ -6,23 +6,22 @@
 
 {% block content %}
 <h2 id="welcome-header">Welcome {{ user.username }}!
-<a href='/updateuser' class="btn btn-primary" id="btn-submit" >Update Profile </a>    
+<a href='/updateuser' class="btn btn-primary" id="btn-update-profile" >Update Profile </a>    
 </h2>
 <div>
-    <h5>Current Shipping Adress: {{ user.shipping_address }}
-    <br>Current Postal Code: {{ user.postal_code }}
-    </h5>
+    <h5 id="balance-header"> User Balance: {{ user.balance }}</h5>
+    <h5 id="shipping-header">Current Shipping Address: {{ user.shipping_address }}</h5>
+    <h5 id="postal-header">Current Postal Code: {{ user.postal_code }}</h5>
 </div>
-
 <h3>Here are all available products:
-<a href='/createproduct' class="btn btn-primary" id="btn-submit" >Create Product </a>
+<a href='/createproduct' class="btn btn-primary" id="btn-create-product" >Create Product </a>
 </h3>
 <div id="products">
     {% for product in products %}
     <div>
-        <h5>{{ product.title }}: ${{ product.price }} {{ product.last_modified_date }} <a href="/updateproduct?pName={{ product.title }}">update</a></h5>
+        <h5 id="{{ product.title }}">{{ product.title }}: ${{ product.price }} {{ product.last_modified_date }} <a href="/updateproduct?pName={{ product.title }}&pLastdate={{ product.last_modified_date }}">update</a></h5>
     </div>
     {% endfor %}
 </div>
-<a href='/logout' class="btn btn-primary" id="btn-submit" >Logout</a>
+<a href='/logout' class="btn btn-primary" id="btn-logout" >Logout</a>
 {% endblock %}
