@@ -47,7 +47,8 @@ This folder contains the qbay folder structure:
 │       └── test_5_update_product.py ======> Testing code for update product web page
 │
 ├── VulnerabilityTests            ======> Testing reports for vulnerabilities
-│   └── PwnXSS Sprint 5           ======> Report of XSS vulnerabilities
+│   ├── PwnXSS Sprint 5           ======> Report of XSS vulnerabilities
+│   └── SQL_Sprint5_Questions     ======> Report of SQL vulnerabilities
 │
 ├── A0-contract.md    ======> Group 20 Project Member Contract
 ├── pull-request_template.md 
