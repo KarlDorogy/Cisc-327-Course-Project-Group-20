@@ -8,10 +8,18 @@ This folder contains the qbay folder structure:
 ```
 ├── LICENSE
 ├── README.md
+├── .gitignore
 ├── .github
 │   └── workflows
 │       ├── pytest.yml       ======> CI settings for running test automatically (trigger test for commits/pull-requests)
 │       └── style_check.yml  ======> CI settings for checking PEP8 automatically (trigger test for commits/pull-requests)
+│ 
+├── DailyScrumMeetings
+│   ├── Meeting-Sprint#4.md         ======> Member Meeting Report for Sprint #4
+│   ├── Sprint#4ProjectBoard.PNG    ======> Sprint #4 Project Board Snapshot
+│   ├── Meeting-Sprint#5.md         ======> Member Meeting Report for Sprint #5
+│   └── Sprint#5ProjectBoard.PNG    ======> Sprint #5 Project Board Snapshot
+│ 
 ├── qbay                 ======> Application source code
 │   ├── __init__.py      ======> Required for a python module
 │   ├── __main__.py      ======> Program entry point
@@ -37,7 +45,14 @@ This folder contains the qbay folder structure:
 │       ├── test_3_update_user.py    ======> Testing code for update user web page
 │       ├── test_4_create_product.py ======> Testing code for create product web page
 │       └── test_5_update_product.py ======> Testing code for update product web page
-└── requirements.txt     ======> Dependencies
+│
+├── A0-contract.md    ======> Group 20 Project Member Contract
+├── pull-request_template.md 
+├── Dockerfile       
+├── docer-compose.yml
+├── wait-for-it.sh
+├── db_init.sql       ======> SQL Database
+└── requirements.txt  ======> Dependencies
 ```
 
 To run the application module (make sure you have a python environment of 3.5+)
