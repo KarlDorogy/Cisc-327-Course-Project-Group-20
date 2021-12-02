@@ -191,6 +191,14 @@ def create_product_post():
     else:
         return redirect('/', code=303)
 
+@app.route('/available', methods=['GET'])
+def buy_products_get():
+    # retrieves current logged in user's email
+    user_email = session['logged_in']
+    print(user_email)
+    products = get_products(user_email)
+    return render_template('available_products.html', available_products=products)
+
 
 @app.route('/logout')
 def logout():
