@@ -1,3 +1,4 @@
+from operator import truediv
 from qbay import app
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
@@ -25,6 +26,7 @@ class User(db.Model):
     shipping_address = db.Column(db.String(120), nullable=True)
     postal_code = db.Column(db.String(120), nullable=True)
     balance = db.Column(db.Float, unique=False, nullable=True)
+    
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -43,7 +45,7 @@ class Product(db.Model):
     last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
     owner_email = db.Column(db.String(1000), unique=False, nullable=False)
-
+    sold = db.Column(db.Boolean, nullable=False)
 
 """
 Lays out the attributes for reviews that verified users can place on products
@@ -81,6 +83,28 @@ class Transaction(db.Model):
 
 # create all tables
 db.create_all()
+
+
+def place_order(name, title):
+    user = User.query.filter_by(username=name).all()
+    product = Product.query.filter_by(title=title).all()
+
+    if(product.price > user.balance):
+        return False
+    elif(product.owner_email == user.email):
+        return False
+    else:
+        product.owner_email = user.email
+        user.balance = user.balance - product.price
+        return True
+    
+def get_unsold_items():
+    unsold_items = Product.query.filter_by(sold=False).all()
+    return unsold_items
+
+def get_owners_items(email):
+    owners_items = Product.query.filter_by(owner_email=email, sold=True).all()
+    return owners_items
 
 
 def update_product(new_price, new_title, 
@@ -139,7 +163,7 @@ def update_product(new_price, new_title,
 
 
 def get_products(email):
-    product_list = Product.query.filter_by(owner_email=email).all()
+    product_list = Product.query.filter_by(owner_email=email, sold=False).all()
     return product_list
 
 
