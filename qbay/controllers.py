@@ -73,7 +73,8 @@ def home(user):
 
     # gets a list of products that the logged in user owns
     user_products = get_products(user.email)
-    return render_template('index.html', user=user, products=user_products)
+    products = get_products(user.email)
+    return render_template('index.html', user=user, owned_products=user_products, bought_products=products)
 
 
 @app.route('/register', methods=['GET'])
@@ -191,14 +192,34 @@ def create_product_post():
     else:
         return redirect('/', code=303)
 
-@app.route('/available', methods=['GET'])
-def buy_products_get():
+@app.route('/listings', methods=['GET'])
+def available_products_get():
     # retrieves current logged in user's email
     user_email = session['logged_in']
-    print(user_email)
     products = get_products(user_email)
     return render_template('available_products.html', available_products=products)
 
+@app.route('/placeorder', methods=['GET'])
+def place_order_get():
+    return render_template('placeorder.html', 
+                           message="Please confirm the purchase below:", 
+                           pTitle=request.args.get('pTitle'), pPrice=request.args.get('pPrice'))
+
+@app.route('/placeorder', methods=['POST'])
+def place_order_post():
+    new_owner = session['logged_in']
+    product_title = request.args.get('pTitle')
+    # use backend api to place the product order
+    success = place_order(new_owner, product_title)
+    error_message = None
+    if not success:
+        error_message = "Placing Order Failed"
+    # if there is any error messages when creating a product
+    # at the backend, go back to the create product page.
+    if error_message:
+        return render_template('available_products.html', message=error_message)
+    else:
+        return redirect('/', code=303)
 
 @app.route('/logout')
 def logout():
