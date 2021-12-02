@@ -96,6 +96,7 @@ def place_order(name, title):
     else:
         product.owner_email = user.email
         user.balance = user.balance - product.price
+        product.sold = True
         return True
     
 def get_unsold_items():
