@@ -73,8 +73,8 @@ def home(user):
 
     # gets a list of products that the logged in user owns
     user_products = get_products(user.email)
-    products = get_products(user.email)
-    return render_template('index.html', user=user, owned_products=user_products, bought_products=products)
+    products = get_products(user.email) # update with correct get products function
+    return render_template('index.html', user=user, owned_products=user_products, orders=products)
 
 
 @app.route('/register', methods=['GET'])
@@ -194,9 +194,9 @@ def create_product_post():
 
 @app.route('/listings', methods=['GET'])
 def available_products_get():
-    # retrieves current logged in user's email
+    # Remove Later: retrieves current logged in user's email
     user_email = session['logged_in']
-    products = get_products(user_email)
+    products = get_products(user_email) # change with correct get products function
     return render_template('available_products.html', available_products=products)
 
 @app.route('/placeorder', methods=['GET'])
@@ -214,8 +214,8 @@ def place_order_post():
     error_message = None
     if not success:
         error_message = "Placing Order Failed"
-    # if there is any error messages when creating a product
-    # at the backend, go back to the create product page.
+    # if there is any error messages when ordering product
+    # at the backend, go back to the available product listings page.
     if error_message:
         return render_template('available_products.html', message=error_message)
     else:

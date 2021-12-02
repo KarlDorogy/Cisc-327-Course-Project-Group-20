@@ -23,11 +23,11 @@
     </div>
     {% endfor %}
 </div>
-<h3>Purchase History:
+<h3>Product Order History:
 <a href='/listings' class="btn btn-primary" id="btn-available-products" >Available Products</a>
 </h3>
-    <div id="bought_products">
-        {% for product in bought_products %}
+    <div id="orders">
+        {% for product in orders %}
         <div>
             <h5 id="{{ product.title }}">Title: {{ product.title }} | Price: ${{ product.price }} | Last Modified Date: {{ product.last_modified_date }}</h5>
         </div>
