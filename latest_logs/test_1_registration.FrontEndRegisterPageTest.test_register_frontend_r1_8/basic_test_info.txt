@@ -1,0 +1,24 @@
+test_1_registration.py::FrontEndRegisterPageTest::test_register_frontend_r1_8
+--------------------------------------------------------------------
+Last Page: http://127.0.0.1:8081/
+  Browser: chrome
+Timestamp: 1638647492  (Unix Timestamp)
+     Date: Saturday, December 4, 2021
+     Time: 2:51:32 PM  (Eastern Daylight Time, UTC-05:00)
+--------------------------------------------------------------------
+Traceback: File "C:\Users\Douglas Chafee\AppData\Local\Programs\Python\Python310\lib\unittest\case.py", line 591, in run
+    self._callTestMethod(testMethod)
+  File "C:\Users\Douglas Chafee\AppData\Local\Programs\Python\Python310\lib\unittest\case.py", line 549, in _callTestMethod
+    method()
+  File "D:\Users\Douglas Chafee\Documents\Queens\Year3\327\Cisc-327-Course-Project-Group-20\qbay_test\frontend\test_1_registration.py", line 422, in test_register_frontend_r1_8
+    self.assert_element("#shipping-header")
+  File "C:\Users\Douglas Chafee\AppData\Local\Programs\Python\Python310\lib\site-packages\seleniumbase\fixtures\base_case.py", line 8797, in assert_element
+    self.wait_for_element_visible(selector, by=by, timeout=timeout)
+  File "C:\Users\Douglas Chafee\AppData\Local\Programs\Python\Python310\lib\site-packages\seleniumbase\fixtures\base_case.py", line 6239, in wait_for_element_visible
+    return page_actions.wait_for_element_visible(
+  File "C:\Users\Douglas Chafee\AppData\Local\Programs\Python\Python310\lib\site-packages\seleniumbase\fixtures\page_actions.py", line 370, in wait_for_element_visible
+    timeout_exception(NoSuchElementException, message)
+  File "C:\Users\Douglas Chafee\AppData\Local\Programs\Python\Python310\lib\site-packages\seleniumbase\fixtures\page_actions.py", line 163, in timeout_exception
+    raise exception(message)
+Exception: Message: 
+ Element {#shipping-header} was not present after 6 seconds!
