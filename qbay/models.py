@@ -45,7 +45,7 @@ class Product(db.Model):
     last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
     owner_email = db.Column(db.String(1000), unique=False, nullable=False)
-    sold = db.Column(db.Boolean, nullable=False)
+    
 
 """
 Lays out the attributes for reviews that verified users can place on products
@@ -69,42 +69,68 @@ Data base table storing each succesful transaction that takes place on Qbay
 
 
 class Transaction(db.Model):
-    # Sets up primary key id for each succesful transaction through Qbay
-    id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
-    # Sets a seller id for the seller of a product with each transaction
-    email = db.Column(db.String(120), unique=False, nullable=False)
-    # The product id that was associated with the transaction
-    product_id = db.Column(db.Integer, nullable=False)
-    # The amount or price of a the transaction between users
-    price = db.Column(db.Float, unique=False, nullable=False)
-    # Sets a timestamp of a transaction
-    date = db.Column(db.Date, unique=False, nullable=False)
+    # The id of the product. Used to identify the product in other entities.
+    id = db.Column(db.Integer, primary_key=True)
+    # The price of the product. The value must be an integer.
+    price = db.Column(db.Integer)
+    # The title of the product.
+    title = db.Column(db.String(80), unique=True, nullable=False)
+    # The description of the product.
+    description = db.Column(db.String(2000), unique=False, nullable=True)
+    # The last modified date of the product.
+    last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
+    # The owner's email
+    owner_email = db.Column(db.String(1000), unique=False, nullable=False)
 
 
 # create all tables
 db.create_all()
 
+# TODO:
+# Remove sold boolean x
+# Create transaction function x
+# Remove get_unsold_items x
+# Remove get_owners_items x
+# Utilize Transaction data model x
 
-def place_order(name, title):
-    user = User.query.filter_by(username=name).all()
+# Model for placing an order
+def place_order(email, title):
+    user = User.query.filter_by(email=email).all()
     product = Product.query.filter_by(title=title).all()
-
+    
+    # Price cannot be greater than user's balance
     if(product.price > user.balance):
         return False
+    # User cannot buy from themselves
     elif(product.owner_email == user.email):
         return False
     else:
-        product.owner_email = user.email
+        # If successful, subtract product price from user balance
         user.balance = user.balance - product.price
+        # Creates transaction item in database
+        new_transaction = Transaction(price=product.price, title=product.title, description=product.description,
+                          last_modified_date=product.last_modified_date,
+                          owner_email=user.email) 
+        db.session.delete(product)
+        db.session.add(new_transaction)
+        db.session.commit()
         return True
-    
-def get_unsold_items():
-    unsold_items = Product.query.filter_by(sold=False).all()
-    return unsold_items
 
-def get_owners_items(email):
-    owners_items = Product.query.filter_by(owner_email=email, sold=True).all()
-    return owners_items
+# Gets all the transactions of a user
+def get_transaction(email):
+    transaction = Transaction.query.filter_by(owner_email=email).one_or_none
+    return transaction
+
+# Gets all the products the user can buy
+# Excludes self because it is not possible to buy from yourself
+def get_search_products(email):
+    all_product = Product.query.filter_by().all()
+    current_user_products = Product.query.filter_by(owner_email=email).all()
+    for product in all_product:
+        if product in current_user_products:
+            all_product.remove(product)
+    
+    return all_product
 
 
 def update_product(new_price, new_title, 
