@@ -88,8 +88,8 @@ db.create_all()
 
 def place_order(email, title):
     # Model for placing an order
-    user = User.query.filter_by(email=email).all()
-    product = Product.query.filter_by(title=title).all()
+    user = User.query.filter_by(email=email).one_or_none()
+    product = Product.query.filter_by(title=title).one_or_none()
     
     # Price cannot be greater than user's balance
     if(product.price > user.balance):
@@ -113,7 +113,7 @@ def place_order(email, title):
 
 def get_transaction(email):
     # Gets all the transactions of a user
-    transaction = Transaction.query.filter_by(owner_email=email).one_or_none
+    transaction = Transaction.query.filter_by(owner_email=email).all()
     return transaction
 
 
