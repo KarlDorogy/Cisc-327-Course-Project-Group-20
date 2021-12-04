@@ -2,9 +2,9 @@ test_1_registration.py::FrontEndRegisterPageTest::test_register_frontend_r1_10
 --------------------------------------------------------------------
 Last Page: http://127.0.0.1:8081/
   Browser: chrome
-Timestamp: 1638647350  (Unix Timestamp)
+Timestamp: 1638659375  (Unix Timestamp)
      Date: Saturday, December 4, 2021
-     Time: 2:49:10 PM  (Eastern Daylight Time, UTC-05:00)
+     Time: 6:09:35 PM  (Eastern Daylight Time, UTC-05:00)
 --------------------------------------------------------------------
 Traceback: File "C:\Users\Douglas Chafee\AppData\Local\Programs\Python\Python310\lib\unittest\case.py", line 591, in run
     self._callTestMethod(testMethod)
