@@ -73,7 +73,8 @@ def home(user):
 
     # gets a list of products that the logged in user owns
     user_products = get_products(user.email)
-    products = get_products(user.email) # update with correct get products function
+    #products = get_products(user.email) # update with correct get products function
+    products = get_transaction(user.email) # update with correct get products function
     return render_template('index.html', user=user, owned_products=user_products, orders=products)
 
 
@@ -196,7 +197,7 @@ def create_product_post():
 def available_products_get():
     # Remove Later: retrieves current logged in user's email
     user_email = session['logged_in']
-    products = get_products(user_email) # change with correct get products function
+    products = get_listings(user_email) # change with correct get products function
     return render_template('available_products.html', available_products=products)
 
 @app.route('/placeorder', methods=['GET'])
