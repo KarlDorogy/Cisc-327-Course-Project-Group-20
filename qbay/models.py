@@ -75,6 +75,8 @@ class Transaction(db.Model):
     title = db.Column(db.String(80), nullable=False)
     # The description of the product.
     description = db.Column(db.String(2000), unique=False, nullable=True)
+    # The last modified date of the product.
+    last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
     owner_email = db.Column(db.String(1000), unique=False, nullable=False)
 
@@ -98,6 +100,7 @@ def place_order(email, title):
         user.balance = user.balance - product.price
         # Creates transaction item in database
         new_transaction = Transaction(price=product.price, title=product.title,
+                                      last_modified_date=product.last_modified_date,
                                       description=product.description,
                                       owner_email=user.email) 
         db.session.delete(product)
