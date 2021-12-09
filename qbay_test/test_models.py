@@ -1,5 +1,6 @@
 from qbay.models import (register, login, update_user,
-                         create_product, update_product, db)
+                         create_product, update_product, db,
+                         place_order)
 
 # Global variable to test max character length of email local and domain
 # while following Flake8 style guide (lines 79 characters or less)
@@ -544,3 +545,33 @@ def test_r5_3_update_product():
     assert update_product(
         1100, "iPhoneTwo",
         "This is a very very expensive phone", "iPhone") is True
+    
+'''   
+def test_transactions():
+    """
+    test_transactions tries completing purchase orders iff
+    the purchaser is not already the product owner, and the product
+    is not worth more than the buyer's account balance
+    """
+    
+    register("Transtest", "Transaction@test.email", "@Password")
+    
+    register("Actiontest", "Transaction1@test.email", "@Password")
+    
+    # This product's value is higher than Transtest balance, should fail.
+    create_product(1000, "expensive", "This product is worth more than 500",
+                   "2021-12-03", "Transaction1@test.email")
+
+    assert place_order("Transaction@test.email", "expensive") is False
+    
+    # This product was listed by the same user trying to buy it, should fail.
+    create_product(100, "My product", "This product is worth more than 500",
+                   "2021-12-03", "Transaction@test.email")
+    
+    assert place_order("Transaction@test.email", "can't buy") is False
+    
+    # This is a valid product to purchase, should pass.
+    create_product(100, "affordable", "This product is worth less than 500",
+                   "2021-12-03", "Transaction1@test.email")
+    
+    assert place_order("Transaction@test.email", "affordable") is True '''

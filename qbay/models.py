@@ -27,7 +27,6 @@ class User(db.Model):
     postal_code = db.Column(db.String(120), nullable=True)
     balance = db.Column(db.Float, unique=False, nullable=True)
     
-
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -84,12 +83,6 @@ class Transaction(db.Model):
 # create all tables
 db.create_all()
 
-# TODO:
-# Remove sold boolean x
-# Create transaction function x
-# Remove get_unsold_items x
-# Remove get_owners_items x
-# Utilize Transaction data model x
 
 # Model for placing an order
 
@@ -114,7 +107,7 @@ def place_order(email, title):
         db.session.commit()
         return True
 
-# Gets all the transactions of a user
+
 def get_transaction(email):
     transaction = Transaction.query.filter_by(owner_email=email).all()
     return transaction
@@ -123,6 +116,8 @@ def get_transaction(email):
 # Gets all the products the user can buy
 # Excludes self because it is not possible to buy from yourself
 def get_search_products(email):
+    # Gets all the products the user can buy
+    # Excludes self because it is not possible to buy from yourself
     all_product = Product.query.filter_by().all()
     current_user_products = Product.query.filter_by(owner_email=email).all()
     for product in all_product:
