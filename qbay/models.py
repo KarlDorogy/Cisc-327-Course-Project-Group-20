@@ -100,7 +100,8 @@ def place_order(email, title):
         user.balance = user.balance - product.price
         # Creates transaction item in database
         new_transaction = Transaction(price=product.price, title=product.title,
-                                      last_modified_date=product.last_modified_date,
+                                      last_modified_date=(product.
+                                                          last_modified_date),
                                       description=product.description,
                                       owner_email=user.email) 
         db.session.delete(product)
