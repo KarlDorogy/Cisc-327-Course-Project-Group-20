@@ -74,11 +74,9 @@ class Transaction(db.Model):
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
     # The title of the product.
-    title = db.Column(db.String(80), unique=True, nullable=False)
+    title = db.Column(db.String(80), nullable=False)
     # The description of the product.
     description = db.Column(db.String(2000), unique=False, nullable=True)
-    # The last modified date of the product.
-    last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
     owner_email = db.Column(db.String(1000), unique=False, nullable=False)
 
@@ -94,9 +92,10 @@ db.create_all()
 # Utilize Transaction data model x
 
 # Model for placing an order
+
 def place_order(email, title):
-    user = User.query.filter_by(email=email).all()
-    product = Product.query.filter_by(title=title).all()
+    user = User.query.filter_by(email=email).one_or_none()
+    product = Product.query.filter_by(title=title).one_or_none()
     
     # Price cannot be greater than user's balance
     if(product.price > user.balance):
@@ -109,7 +108,6 @@ def place_order(email, title):
         user.balance = user.balance - product.price
         # Creates transaction item in database
         new_transaction = Transaction(price=product.price, title=product.title, description=product.description,
-                          last_modified_date=product.last_modified_date,
                           owner_email=user.email) 
         db.session.delete(product)
         db.session.add(new_transaction)
@@ -118,8 +116,9 @@ def place_order(email, title):
 
 # Gets all the transactions of a user
 def get_transaction(email):
-    transaction = Transaction.query.filter_by(owner_email=email).one_or_none
+    transaction = Transaction.query.filter_by(owner_email=email).all()
     return transaction
+
 
 # Gets all the products the user can buy
 # Excludes self because it is not possible to buy from yourself
