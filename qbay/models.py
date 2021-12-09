@@ -27,7 +27,6 @@ class User(db.Model):
     postal_code = db.Column(db.String(120), nullable=True)
     balance = db.Column(db.Float, unique=False, nullable=True)
     
-
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -86,17 +85,11 @@ class Transaction(db.Model):
 # create all tables
 db.create_all()
 
-# TODO:
-# Remove sold boolean x
-# Create transaction function x
-# Remove get_unsold_items x
-# Remove get_owners_items x
-# Utilize Transaction data model x
 
-# Model for placing an order
 def place_order(email, title):
-    user = User.query.filter_by(email=email).all()
-    product = Product.query.filter_by(title=title).all()
+    # Model for placing an order
+    user = User.query.filter_by(email=email).one_or_none()
+    product = Product.query.filter_by(title=title).one_or_none()
     
     # Price cannot be greater than user's balance
     if(product.price > user.balance):
@@ -108,22 +101,25 @@ def place_order(email, title):
         # If successful, subtract product price from user balance
         user.balance = user.balance - product.price
         # Creates transaction item in database
-        new_transaction = Transaction(price=product.price, title=product.title, description=product.description,
-                          last_modified_date=product.last_modified_date,
-                          owner_email=user.email) 
+        new_transaction = Transaction(price=product.price, title=product.title,
+                                      description=product.description,
+                                      last_modified_date=product.last_modified_date,
+                                      owner_email=user.email) 
         db.session.delete(product)
         db.session.add(new_transaction)
         db.session.commit()
         return True
 
-# Gets all the transactions of a user
+
 def get_transaction(email):
-    transaction = Transaction.query.filter_by(owner_email=email).one_or_none
+    # Gets all the transactions of a user
+    transaction = Transaction.query.filter_by(owner_email=email).all()
     return transaction
 
-# Gets all the products the user can buy
-# Excludes self because it is not possible to buy from yourself
+
 def get_search_products(email):
+    # Gets all the products the user can buy
+    # Excludes self because it is not possible to buy from yourself
     all_product = Product.query.filter_by().all()
     current_user_products = Product.query.filter_by(owner_email=email).all()
     for product in all_product:
