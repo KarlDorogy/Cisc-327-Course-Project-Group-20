@@ -70,12 +70,13 @@ def login_post():
 @app.route('/')
 @authenticate
 def home(user):
-
     # gets a list of products that the logged in user owns
     user_products = get_products(user.email)
-    #products = get_products(user.email) # update with correct get products function
-    products = get_transaction(user.email) # update with correct get products function
-    return render_template('index.html', user=user, owned_products=user_products, orders=products)
+    
+    # gets list of user purchased products
+    products = get_transaction(user.email)  
+    return render_template('index.html', user=user, 
+                           owned_products=user_products, orders=products)
 
 
 @app.route('/register', methods=['GET'])
@@ -193,18 +194,25 @@ def create_product_post():
     else:
         return redirect('/', code=303)
 
+
 @app.route('/listings', methods=['GET'])
 def available_products_get():
-    # Remove Later: retrieves current logged in user's email
+    # retrieves current logged in user's email
     user_email = session['logged_in']
-    products = get_listings(user_email) # change with correct get products function
-    return render_template('available_products.html', available_products=products)
+
+    # gets other user products that are available to purchase
+    products = get_listings(user_email)
+    return render_template('available_products.html', 
+                           available_products=products)
+
 
 @app.route('/placeorder', methods=['GET'])
 def place_order_get():
     return render_template('placeorder.html', 
                            message="Please confirm the purchase below:", 
-                           pTitle=request.args.get('pTitle'), pPrice=request.args.get('pPrice'))
+                           pTitle=request.args.get('pTitle'), 
+                           pPrice=request.args.get('pPrice'))
+
 
 @app.route('/placeorder', methods=['POST'])
 def place_order_post():
@@ -218,9 +226,11 @@ def place_order_post():
     # if there is any error messages when ordering product
     # at the backend, go back to the available product listings page.
     if error_message:
-        return render_template('available_products.html', message=error_message)
+        return render_template('available_products.html', 
+                               message=error_message)
     else:
         return redirect('/', code=303)
+
 
 @app.route('/logout')
 def logout():
