@@ -88,7 +88,11 @@ db.create_all()
 def place_order(email, title):
     user = User.query.filter_by(email=email).one_or_none()
     product = Product.query.filter_by(title=title).one_or_none()
+    print(product.title)
     
+    if product is None or user is None:
+        return False
+            
     # Price cannot be greater than user's balance
     if(product.price > user.balance):
         return False
@@ -107,7 +111,7 @@ def place_order(email, title):
         db.session.delete(product)
         db.session.add(new_transaction)
         db.session.commit()
-        return True
+        return True 
 
 
 def get_transaction(email):
