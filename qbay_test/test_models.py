@@ -546,7 +546,7 @@ def test_r5_3_update_product():
         1100, "iPhoneTwo",
         "This is a very very expensive phone", "iPhone") is True
     
-'''   
+       
 def test_transactions():
     """
     test_transactions tries completing purchase orders iff
@@ -574,4 +574,4 @@ def test_transactions():
     create_product(100, "affordable", "This product is worth less than 500",
                    "2021-12-03", "Transaction1@test.email")
     
-    assert place_order("Transaction@test.email", "affordable") is True '''
+    assert place_order("Transaction@test.email", "affordable") is True

@@ -33,11 +33,11 @@ class User(db.Model):
 
 class Product(db.Model):
     # The id of the product. Used to identify the product in other entities.
-    id = db.Column(db.Integer, primary_key=True)
+    #id = db.Column(db.Integer, primary_key=True)
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
     # The title of the product.
-    title = db.Column(db.String(80), unique=True, nullable=False)
+    title = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
     # The description of the product.
     description = db.Column(db.String(2000), unique=False, nullable=True)
     # The last modified date of the product.
@@ -68,18 +68,14 @@ Data base table storing each succesful transaction that takes place on Qbay
 
 
 class Transaction(db.Model):
-    # The id of the product. Used to identify the product in other entities.
-    id = db.Column(db.Integer, primary_key=True)
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
     # The title of the product.
     title = db.Column(db.String(80), unique=True, nullable=False)
-    # The description of the product.
-    description = db.Column(db.String(2000), unique=False, nullable=True)
     # The last modified date of the product.
     last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
-    owner_email = db.Column(db.String(1000), unique=False, nullable=False)
+    owner_email = db.Column(db.String(120), unique=True, nullable=False,  primary_key=True)
 
 
 # create all tables
@@ -109,6 +105,7 @@ def place_order(email, title):
         db.session.add(new_transaction)
         db.session.commit()
         return True
+    return True
 
 
 def get_transaction(email):
@@ -116,7 +113,7 @@ def get_transaction(email):
     transaction = Transaction.query.filter_by(owner_email=email).all()
     return transaction
 
-
+'''
 def get_search_products(email):
     # Gets all the products the user can buy
     # Excludes self because it is not possible to buy from yourself
@@ -127,7 +124,7 @@ def get_search_products(email):
             all_product.remove(product)
     
     return all_product
-
+'''
 
 def update_product(new_price, new_title, 
                    new_description, title):
@@ -185,7 +182,7 @@ def update_product(new_price, new_title,
 
 
 def get_products(email):
-    product_list = Product.query.filter_by(owner_email=email, sold=False).all()
+    product_list = Product.query.filter_by(owner_email=email).all()
     return product_list
 
 
