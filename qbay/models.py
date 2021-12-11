@@ -1,3 +1,4 @@
+from operator import truediv
 from qbay import app
 from datetime import date
 from flask_sqlalchemy import SQLAlchemy
@@ -85,6 +86,9 @@ class Transaction(db.Model):
 db.create_all()
 
 
+# Model for placing an order
+
+
 def place_order(email, title):
     user = User.query.filter_by(email=email).one_or_none()
     product = Product.query.filter_by(title=title).one_or_none()
@@ -111,7 +115,7 @@ def place_order(email, title):
         db.session.delete(product)
         db.session.add(new_transaction)
         db.session.commit()
-        return True 
+        return True
 
 
 def get_transaction(email):
