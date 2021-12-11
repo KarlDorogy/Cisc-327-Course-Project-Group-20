@@ -26,7 +26,7 @@ class User(db.Model):
     shipping_address = db.Column(db.String(120), nullable=True)
     postal_code = db.Column(db.String(120), nullable=True)
     balance = db.Column(db.Float, unique=False, nullable=True)
-    
+
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -37,15 +37,14 @@ class Product(db.Model):
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
     # The title of the product.
-    title = db.Column(db.String(80), unique=True, nullable=False, 
-                      primary_key=True)
+    title = db.Column(db.String(80), unique=True, nullable=False)
     # The description of the product.
     description = db.Column(db.String(2000), unique=False, nullable=True)
     # The last modified date of the product.
     last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
     owner_email = db.Column(db.String(1000), unique=False, nullable=False)
-    
+
 
 """
 Lays out the attributes for reviews that verified users can place on products
@@ -69,17 +68,18 @@ Data base table storing each succesful transaction that takes place on Qbay
 
 
 class Transaction(db.Model):
+    # The id of the product. Used to identify the product in other entities.
+    id = db.Column(db.Integer, primary_key=True)
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
     # The title of the product.
     title = db.Column(db.String(80), nullable=False)
     # The description of the product.
     description = db.Column(db.String(2000), unique=False, nullable=True)
-    
+    # The last modified date of the product.
     last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
-    owner_email = db.Column(db.String(120), unique=False, nullable=False,
-                            primary_key=True)
+    owner_email = db.Column(db.String(1000), unique=False, nullable=False)
 
 
 # create all tables
