@@ -75,6 +75,8 @@ class Transaction(db.Model):
     title = db.Column(db.String(80), nullable=False)
     # The description of the product.
     description = db.Column(db.String(2000), unique=False, nullable=True)
+    
+    last_modified_date = db.Column(db.String(10), unique=False, nullable=False)
     # The owner's email
     owner_email = db.Column(db.String(120), unique=False, nullable=False,
                             primary_key=True)
@@ -85,6 +87,7 @@ db.create_all()
 
 
 # Model for placing an order
+
 
 def place_order(email, title):
     user = User.query.filter_by(email=email).one_or_none()
