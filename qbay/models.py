@@ -33,7 +33,7 @@ class User(db.Model):
 
 class Product(db.Model):
     # The id of the product. Used to identify the product in other entities.
-    # id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
     # The title of the product.
