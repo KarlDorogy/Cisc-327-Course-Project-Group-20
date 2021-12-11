@@ -33,11 +33,12 @@ class User(db.Model):
 
 class Product(db.Model):
     # The id of the product. Used to identify the product in other entities.
-    #id = db.Column(db.Integer, primary_key=True)
+    # id = db.Column(db.Integer, primary_key=True)
     # The price of the product. The value must be an integer.
     price = db.Column(db.Integer)
     # The title of the product.
-    title = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
+    title = db.Column(db.String(80), unique=True, nullable=False, 
+                      primary_key=True)
     # The description of the product.
     description = db.Column(db.String(2000), unique=False, nullable=True)
     # The last modified date of the product.
@@ -75,7 +76,8 @@ class Transaction(db.Model):
     # The description of the product.
     description = db.Column(db.String(2000), unique=False, nullable=True)
     # The owner's email
-    owner_email = db.Column(db.String(120), unique=False, nullable=False,  primary_key=True)
+    owner_email = db.Column(db.String(120), unique=False, nullable=False,
+                            primary_key=True)
 
 
 # create all tables
@@ -127,6 +129,7 @@ def get_products(email):
 def get_listings(email):
     product_list = Product.query.filter(Product.owner_email != email).all()
     return product_list
+
 
 def update_product(new_price, new_title, 
                    new_description, title):
