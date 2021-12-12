@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Qbay Product Listings{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<h3>Available Products:</h3>
+<h4 id='message'>{{message}}</h4>
+<h5> ----------------------- </h5>
+<div id="products">
+    {% for product in available_products %}
+    <div>
+        <h5 id="{{ product.title }}">Title: {{ product.title }} <br> Price: ${{ product.price }} <br> Description: {{ product.description }} <br> <a href="/placeorder?pTitle={{ product.title }}&pPrice={{ product.price }}" id="{{ product.title }}">Buy</a></h5>
+        <h5> ----------------------- </h5>
+    </div>
+    {% endfor %}
+</div>
+<a href='/logout' class="btn btn-primary" id="btn-logout" >Logout</a>
+<a href='/' class="btn btn-primary" id="btn-home" >Home</a>
+{% endblock %}

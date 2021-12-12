@@ -13,15 +13,25 @@
     <h5 id="shipping-header">Current Shipping Address: {{ user.shipping_address }}</h5>
     <h5 id="postal-header">Current Postal Code: {{ user.postal_code }}</h5>
 </div>
-<h3>Here are all available products:
+<h3>Owned Products:
 <a href='/createproduct' class="btn btn-primary" id="btn-create-product" >Create Product </a>
 </h3>
-<div id="products">
-    {% for product in products %}
+<div id="owned_products">
+    {% for product in owned_products %}
     <div>
-        <h5 id="{{ product.title }}">{{ product.title }}: ${{ product.price }} {{ product.last_modified_date }} <a href="/updateproduct?pName={{ product.title }}&pLastdate={{ product.last_modified_date }}">update</a></h5>
+        <h5 id="{{ product.title }}">Title: {{ product.title }} | Price: ${{ product.price }} | Last Modified Date: {{ product.last_modified_date }} <a href="/updateproduct?pName={{ product.title }}&pLastdate={{ product.last_modified_date }}">update</a></h5>
     </div>
     {% endfor %}
 </div>
+<h3>Product Order History:
+<a href='/listings' class="btn btn-primary" id="btn-available-products" >Available Products</a>
+</h3>
+    <div id="orders">
+        {% for product in orders %}
+        <div>
+            <h5 id="{{ product.title }}">Title: {{ product.title }} | Price: ${{ product.price }} | Last Modified Date: {{ product.last_modified_date }}</h5>
+        </div>
+        {% endfor %}
+    </div>
 <a href='/logout' class="btn btn-primary" id="btn-logout" >Logout</a>
 {% endblock %}
