@@ -1,4 +1,4 @@
-version: "2"
+version: "1"
 services:
   qbay-web:
     image: cisc327group20/cisc327courseprojectgroup20:v1

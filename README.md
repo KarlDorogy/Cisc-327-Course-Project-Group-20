@@ -15,10 +15,20 @@ This folder contains the qbay folder structure:
 │       └── style_check.yml  ======> CI settings for checking PEP8 automatically (trigger test for commits/pull-requests)
 │ 
 ├── DailyScrumMeetings
-│   ├── Meeting-Sprint#4.md         ======> Member Meeting Report for Sprint #4
-│   ├── Sprint#4ProjectBoard.PNG    ======> Sprint #4 Project Board Snapshot
-│   ├── Meeting-Sprint#5.md         ======> Member Meeting Report for Sprint #5
-│   └── Sprint#5ProjectBoard.PNG    ======> Sprint #5 Project Board Snapshot
+│   ├── Meeting-Sprint#4.md          ======> Member Meeting Report for Sprint #4
+│   ├── Meeting-Sprint#5.md          ======> Member Meeting Report for Sprint #5
+│   ├── Meeting1-Sprint#6.md         ======> Member Meeting 1 Report for Sprint #6
+│   ├── Meeting2-Sprint#6.md         ======> Member Meeting 2 Report for Sprint #6
+│   ├── Sprint#4ProjectBoard.PNG     ======> Sprint #4 Project Board Snapshot
+│   ├── Sprint#5ProjectBoard.PNG     ======> Sprint #4 Project Board Snapshot
+│   ├── Sprint#6ProjectBoard1.PNG    ======> Sprint #6 Project Board 1 Snapshot
+│   └── Sprint#6ProjectBoard2.PNG    ======> Sprint #6 Project Board 2 Snapshot
+│ 
+├── VulnerabilityTests                ======> Testing reports for vulnerabilities
+│   ├── PwnXSS Sprint 5.pdf           ======> Report of XSS vulnerabilities for sprint 5
+│   ├── PwnXSS Sprint 6.pdf           ======> Report of XSS vulnerabilities for sprint 6
+│   ├── SQL_Sprint5_Questions.pdf     ======> Report of XSS vulnerabilities for sprint 5
+│   └── SQL_Sprint6_Questions.pdf     ======> Report of SQL vulnerabilities for sprint 6
 │ 
 ├── qbay                 ======> Application source code
 │   ├── __init__.py      ======> Required for a python module
@@ -26,14 +36,16 @@ This folder contains the qbay folder structure:
 │   ├── controllers.py   ======> Program html web page post and get request controller
 │   ├── models.py        ======> Data models
 │   └── templates        ======> Folder for frontend web page testing
-│       ├── base.html               ======> default base template for all other html web pages to insert into
-│       ├── createproduct.html      ======> html web page for user to create a product
-│       ├── index.html              ======> html home web page for users
-│       ├── login.html              ======> html web page for user to login into a account
-│       ├── register.html           ======> html web page for user to register an account 
-│       ├── updateproduct.html      ======> html web page for user to update a product
-│       ├── updateuser.html         ======> html web page for user to update thier account
-│       └── test_update_product.py  ======> Testing code for update product web page
+│       ├── available_products.html   ======> html web page for the listing of available products to a user
+│       ├── base.html                 ======> default base template for all other html web pages to insert into
+│       ├── createproduct.html        ======> html web page for user to create a product
+│       ├── index.html                ======> html home web page for users
+│       ├── login.html                ======> html web page for user to login into a account
+│       ├── placeorder.html           ======> html web page for user to confirm an order on an product 
+│       ├── register.html             ======> html web page for user to register an account 
+│       ├── updateproduct.html        ======> html web page for user to update a product
+│       ├── updateuser.html           ======> html web page for user to update thier account
+│       └── test_update_product.py    ======> Testing code for update product web page
 │
 ├── qbay_test            ======> Testing code
 │   ├── __init__.py      ======> Required for a python module
@@ -44,11 +56,9 @@ This folder contains the qbay folder structure:
 │       ├── test_2_login.py          ======> Testing code for registration web page
 │       ├── test_3_update_user.py    ======> Testing code for update user web page
 │       ├── test_4_create_product.py ======> Testing code for create product web page
-│       └── test_5_update_product.py ======> Testing code for update product web page
+│       ├── test_5_update_product.py ======> Testing code for update product web page
+│       └── test_6_place_order.py ======> Testing code for placeing order & available products web pages
 │
-├── VulnerabilityTests            ======> Testing reports for vulnerabilities
-│   ├── PwnXSS Sprint 5           ======> Report of XSS vulnerabilities
-│   └── SQL_Sprint5_Questions     ======> Report of SQL vulnerabilities
 │
 ├── A0-contract.md    ======> Group 20 Project Member Contract
 ├── pull-request_template.md 
