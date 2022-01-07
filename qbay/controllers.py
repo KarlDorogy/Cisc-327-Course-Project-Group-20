@@ -30,7 +30,7 @@ def authenticate(inner_function):
                     # with user as parameter
                     return inner_function(user)
             except Exception:
-                pass
+                return redirect('/login')
         else:
             # else, redirect to the login page
             return redirect('/login')
